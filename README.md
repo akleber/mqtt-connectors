@@ -26,5 +26,6 @@ python3 fronius-mqtt-bridge.py
 
 # ToDo
 
+* pubish only if a client is connected to the broker
 * add last will
 * document my setup
