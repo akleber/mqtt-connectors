@@ -20,3 +20,6 @@ Then set the right hostnames or ip addresss and ports in fronius-mqtt-bridge.py 
 ```
 python3 fronius-mqtt-bridge.py
 ```
+
+# Acknowledgement
+* [Jan-Piet Mens](https://jpmens.net/2013/03/10/visualizing-energy-consumption-with-mqtt/) for the inspiration for the script.
