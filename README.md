@@ -1,6 +1,6 @@
 # fronius-mqtt-bridge
 
-Python script to fetch power flow realtime data from a fronis data manager and pubish it to a mqtt broker.
+Python script to fetch power flow realtime data from a fronius data manager API and pubish it to a mqtt broker.
 
 # Requirements
 * Tested with Python 3.5
@@ -15,7 +15,7 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-Then set the right hostnames or ip addresss and ports in fronius-mqtt-bridge.py and run
+Then set the right hostnames or ip addresss and ports in fronius-mqtt-bridge.py and run:
 
 ```
 python3 fronius-mqtt-bridge.py
