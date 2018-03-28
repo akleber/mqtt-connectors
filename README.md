@@ -2,6 +2,8 @@
 
 Python script to fetch power flow realtime data from a fronius data manager API and pubish it to a mqtt broker.
 
+I use it with [this setup](doc/setup.md)
+
 # Requirements
 * Tested with Python 3.5
 
