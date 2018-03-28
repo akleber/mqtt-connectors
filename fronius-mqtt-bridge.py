@@ -17,6 +17,7 @@ def fronius_data():
     p_grid = -0.1
     p_akku = -0.1
     p_load = -0.1
+    soc = 0
 
     try:
         url = "http://{}/solar_api/v1/GetPowerFlowRealtimeData.fcgi".format(FRONIUS_HOST)  # noqa E501
@@ -27,12 +28,13 @@ def fronius_data():
         p_grid = powerflow_data['Body']['Data']['Site']['P_Grid']
         p_akku = powerflow_data['Body']['Data']['Site']['P_Akku']
         p_load = -powerflow_data['Body']['Data']['Site']['P_Load']
+        soc = powerflow_data['Body']['Data']['Inverters']['1']['SOC']
     except requests.exceptions.Timeout:
         print("Timeout requesting {}".format(url))
     except requests.exceptions.RequestException as e:
         print("requests exception {}".format(e))
 
-    return (p_pv, p_grid, p_akku, p_load)
+    return (p_pv, p_grid, p_akku, p_load, soc)
 
 
 if __name__ == '__main__':
@@ -51,7 +53,7 @@ if __name__ == '__main__':
     mqttc.loop_start()
     while True:
         try:
-            (p_pv, p_grid, p_akku, p_load) = fronius_data()
+            (p_pv, p_grid, p_akku, p_load, soc) = fronius_data()
             logging.debug("Data from fronius: p_pv {}, p_grid {}, p_akku {}, p_load {}".format(p_pv, p_grid, p_akku, p_load))  # noqa E501
             (result, mid) = mqttc.publish('fronius/p_pv', str(p_pv), 0)
             logging.debug("Pubish Result: {} MID: {} p_pv: {}".format(result, mid, p_pv))  # noqa E501
@@ -61,6 +63,8 @@ if __name__ == '__main__':
             logging.debug("Pubish Result: {} MID: {} p_akku: {}".format(result, mid, p_akku))  # noqa E501
             (result, mid) = mqttc.publish('fronius/p_load', str(p_load), 0)
             logging.debug("Pubish Result: {} MID: {} p_load: {}".format(result, mid, p_load))  # noqa E501
+            (result, mid) = mqttc.publish('fronius/soc', str(soc), 0)
+            logging.debug("Pubish Result: {} MID: {} soc: {}".format(result, mid, soc))  # noqa E501
             time.sleep(FREQUENCY)
         except KeyboardInterrupt:
             break
@@ -72,6 +76,7 @@ if __name__ == '__main__':
     mqttc.publish('fronius/p_grid', str(0), 0, retain=True)
     mqttc.publish('fronius/p_akku', str(0), 0, retain=True)
     mqttc.publish('fronius/p_load', str(0), 0, retain=True)
+    mqttc.publish('fronius/soc', str(0), 0, retain=True)
 
     mqttc.publish("fronius/bridgestatus", "OFF-LINE")
 
