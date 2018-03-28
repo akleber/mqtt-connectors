@@ -3,6 +3,8 @@
 import paho.mqtt.client as paho  # pip install paho-mqtt
 import requests
 import time
+import logging
+import sys
 
 FRONIUS_HOST = 'fronius.fritz.box'
 BROKER_HOST = 'raspberrypi.fritz.box'
@@ -34,26 +36,45 @@ def fronius_data():
 
 
 if __name__ == '__main__':
-    mqttc = paho.Client('fronius-mqtt-brifge', clean_session=True)
-    mqttc.connect(BROKER_HOST, BROKER_PORT, 60)
-    mqttc.loop_start()
+    logging.basicConfig(stream=sys.stderr, level=logging.INFO)
+    logging.getLogger("urllib3").setLevel(logging.INFO)
 
+    mqttc = paho.Client('fronius-mqtt-brifge', clean_session=True)
+    # mqttc.enable_logger()
+    mqttc.will_set("fronius/bridgestatus", "LOST_CONNECTION", 0, False)
+
+    mqttc.connect(BROKER_HOST, BROKER_PORT, 60)
+    logging.info("Connected to {}:{}".format(BROKER_HOST, BROKER_PORT))
+
+    mqttc.publish("fronius/bridgestatus", "ON-LINE")
+
+    mqttc.loop_start()
     while True:
         try:
             (p_pv, p_grid, p_akku, p_load) = fronius_data()
+            logging.debug("Data from fronius: p_pv {}, p_grid {}, p_akku {}, p_load {}".format(p_pv, p_grid, p_akku, p_load))  # noqa E501
             (result, mid) = mqttc.publish('fronius/p_pv', str(p_pv), 0)
-            # print("Pubish Result: {} MID: {} p_pv: {}".format(result, mid, p_pv))  # noqa E501
+            logging.debug("Pubish Result: {} MID: {} p_pv: {}".format(result, mid, p_pv))  # noqa E501
             (result, mid) = mqttc.publish('fronius/p_grid', str(p_grid), 0)
-            # print("Pubish Result: {} MID: {} p_grid: {}".format(result, mid, p_grid))  # noqa E501
+            logging.debug("Pubish Result: {} MID: {} p_grid: {}".format(result, mid, p_grid))  # noqa E501
             (result, mid) = mqttc.publish('fronius/p_akku', str(p_akku), 0)
-            # print("Pubish Result: {} MID: {} p_akku: {}".format(result, mid, p_akku))  # noqa E501
+            logging.debug("Pubish Result: {} MID: {} p_akku: {}".format(result, mid, p_akku))  # noqa E501
             (result, mid) = mqttc.publish('fronius/p_load', str(p_load), 0)
-            # print("Pubish Result: {} MID: {} p_load: {}".format(result, mid, p_load))  # noqa E501
-            # print("")
+            logging.debug("Pubish Result: {} MID: {} p_load: {}".format(result, mid, p_load))  # noqa E501
             time.sleep(FREQUENCY)
         except KeyboardInterrupt:
             break
         except Exception:
             raise
-    mqttc.loop_stop()
+
+    # Set values to 0 and retain this value
+    mqttc.publish('fronius/p_pv', str(0), 0, retain=True)
+    mqttc.publish('fronius/p_grid', str(0), 0, retain=True)
+    mqttc.publish('fronius/p_akku', str(0), 0, retain=True)
+    mqttc.publish('fronius/p_load', str(0), 0, retain=True)
+
+    mqttc.publish("fronius/bridgestatus", "OFF-LINE")
+
     mqttc.disconnect()
+    mqttc.loop_stop()  # waits, until DISCONNECT message is sent out
+    logging.info("Disconnected from to {}:{}".format(BROKER_HOST, BROKER_PORT))
