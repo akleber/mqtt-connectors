@@ -5,4 +5,4 @@ I have a [mosquitto](https://mosquitto.org) MQTT broker running on a Raspberry P
 the [IoT OnOff](https://www.iot-onoff.com) app for visualizing its data.
 On the Pi this script here runs in a loop to fetch data from the Fronius API an publish it to mosquitto every 2 seconds.
 
-![IoT OnOff Fronis](IoT_OnOff_Fronius.jpeg){:height="300px"}
+<img src="IoT_OnOff_Fronius.jpeg" height="300">
