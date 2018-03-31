@@ -28,7 +28,7 @@ def fronius_data():
         values['p_load'] = -powerflow_data['Body']['Data']['Site']['P_Load']
         values['soc'] = powerflow_data['Body']['Data']['Inverters']['1']['SOC']
         values['battery_mode'] = powerflow_data['Body']['Data']['Inverters']['1']['Battery_Mode']
-        values['e_day'] = powerflow_data['Body']['Data']['Inverters']['1']['E_Day']
+        values['e_day'] = powerflow_data['Body']['Data']['Inverters']['1']['E_Day'] / 1000
 
 
     except requests.exceptions.Timeout:
