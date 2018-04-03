@@ -23,7 +23,7 @@ def goecharger_data():
         r.raise_for_status()
         j = r.json()
         
-        values['power_sum'] = (jsondata['nrg'][7] + jsondata['nrg'][8] + jsondata['nrg'][9]) * 10
+        values['power_sum'] = (j['nrg'][7] + j['nrg'][8] + j['nrg'][9]) * 10
 
 
     except requests.exceptions.Timeout:
