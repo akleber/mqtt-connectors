@@ -43,14 +43,14 @@ if __name__ == '__main__':
     logging.basicConfig(stream=sys.stderr, level=logging.INFO)
     logging.getLogger("urllib3").setLevel(logging.INFO)
 
-    mqttc = paho.Client('fronius-mqtt-bridge', clean_session=True)
+    mqttc = paho.Client('fronius-mqtt-connector', clean_session=True)
     # mqttc.enable_logger()
-    mqttc.will_set("{}/bridgestatus".format(FRONIUS_MQTT_PREFIX), "LOST_CONNECTION", 0, retain=True)
+    mqttc.will_set("{}/connectorstatus".format(FRONIUS_MQTT_PREFIX), "LOST_CONNECTION", 0, retain=True)
 
     mqttc.connect(BROKER_HOST, BROKER_PORT, 60)
     logging.info("Connected to {}:{}".format(BROKER_HOST, BROKER_PORT))
 
-    mqttc.publish("{}/bridgestatus".format(FRONIUS_MQTT_PREFIX), "ON-LINE", retain=True)
+    mqttc.publish("{}/connectorstatus".format(FRONIUS_MQTT_PREFIX), "ON-LINE", retain=True)
 
     mqttc.loop_start()
     while True:
@@ -66,7 +66,7 @@ if __name__ == '__main__':
         except Exception:
             raise
 
-    mqttc.publish("{}/bridgestatus".format(FRONIUS_MQTT_PREFIX), "OFF-LINE", retain=True)
+    mqttc.publish("{}/connectorstatus".format(FRONIUS_MQTT_PREFIX), "OFF-LINE", retain=True)
 
     mqttc.disconnect()
     mqttc.loop_stop()  # waits, until DISCONNECT message is sent out
