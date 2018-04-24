@@ -1,5 +1,10 @@
 #!/usr/bin/env python
 
+"""Fetches some data from the go-eCharger local
+json api and published them to mqtt every 5
+seconds. 
+Read-only."""
+
 import paho.mqtt.client as paho  # pip install paho-mqtt
 import requests
 import time

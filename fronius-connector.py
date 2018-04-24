@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 
+"""Fetches some data from the fronius json api
+and publishes the result to mqtt.
+Read only."""
+
 import paho.mqtt.client as paho  # pip install paho-mqtt
 import requests
 import time
