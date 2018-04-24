@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
-"""Fetches some data from the fronius json api
-and publishes the result to mqtt.
-Read only."""
+"""Fetches and sets the fronius battery charging
+power in % via modbus.
+Inspired by Juraj's battsett.jar."""
 
 import paho.mqtt.client as paho  # pip install paho-mqtt
 import requests
@@ -18,6 +18,7 @@ FREQUENCY = 10
 
 def battery_data():
 
+    values['chg_p'] = 100
     return values
 
 
