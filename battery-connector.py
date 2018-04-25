@@ -17,7 +17,7 @@ MODBUS_HOST = 'fronius.fritz.box'
 BATTERY_MQTT_PREFIX = 'battery'
 BROKER_HOST = 'raspberrypi.fritz.box'
 BROKER_PORT = 1883
-FREQUENCY = 30
+FREQUENCY = 10
 
 
 def battery_data():
@@ -38,13 +38,22 @@ def battery_data():
     inWRte = BinaryPayloadDecoder.fromRegisters(r.registers, byteorder=Endian.Big) # noqa E501
 
     values['chg_p'] = inWRte.decode_16bit_uint() / 100
-    print("batt_chg_p {}%".format(values['chg_p']))
-
-    # client.write_register(40327-1,3000,unit=1)
+    logging.debug("batt_chg_p {}%".format(values['chg_p']))
 
     client.close()
 
     return values
+
+
+def on_message(mqttc, obj, msg):
+    if msg.topic == "battery/set/chg_p":
+        newValue = int(msg.payload) * 100
+        client = ModbusClient(MODBUS_HOST, port=502)
+        client.connect()
+        client.write_register(40327 - 1, newValue, unit=1)
+        client.close()
+
+        logging.debug("{} {} {}".format(msg.topic, str(msg.qos), str(msg.payload))) # noqa E501
 
 
 if __name__ == '__main__':
@@ -58,6 +67,9 @@ if __name__ == '__main__':
     logging.info("Connected to {}:{}".format(BROKER_HOST, BROKER_PORT))
 
     mqttc.publish("{}/connectorstatus".format(BATTERY_MQTT_PREFIX), "ON-LINE", retain=True) # noqa E501
+
+    mqttc.on_message = on_message
+    mqttc.subscribe("{}/set/chg_p".format(BATTERY_MQTT_PREFIX), 0)
 
     mqttc.loop_start()
     while True:
