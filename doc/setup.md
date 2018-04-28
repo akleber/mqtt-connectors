@@ -22,3 +22,10 @@ stderr_logfile=/var/log/supervisor/fronius.err.log
 stdout_logfile=/var/log/supervisor/fronius.out.log
 user=pi
 ```
+
+To update supervisor.d with changes run
+
+```
+supervisorctl reread
+supervisorctl update
+```
