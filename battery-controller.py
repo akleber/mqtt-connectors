@@ -15,7 +15,7 @@ MAX_CHG_P = 2500
 MAX_AC_P = 2900
 PV_P_TOPIC = 'fronius/p_pv'
 SET_CHG_P_TOPIC = 'battery/set/chg_p'
-CHG_P_TOPIC = 'battery/chg_p'
+CHG_PPRRCENT_TOPIC = 'battery/chg_p'
 
 chg_percent = 0
 pv_p = 0
@@ -46,7 +46,7 @@ def update_chg_p():
 
 
 def on_message(mqttc, obj, msg):
-    if msg.topic == CHG_P_TOPIC:
+    if msg.topic == CHG_PERCENT_TOPIC:
         chg_percent = int(msg.payload)
        
     if msg.topic == PV_P_TOPIC:
@@ -66,7 +66,7 @@ if __name__ == '__main__':
     
     mqttc.on_message = on_message
     mqttc.subscribe(PV_P_TOPIC, 0)
-    mqttc.subscribe(CHG_P_TOPIC, 0)
+    mqttc.subscribe(CHG_PERCENT_TOPIC, 0)
 
     mqttc.loop_start()
     while True:
