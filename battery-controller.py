@@ -16,9 +16,12 @@ MAX_AC_P = 2900
 PV_P_TOPIC = 'fronius/p_pv'
 SET_CHG_P_TOPIC = 'battery/set/chg_p'
 CHG_PPRRCENT_TOPIC = 'battery/chg_p'
+AUTO_CHG_TOPIC = 'battery/auto_chg_p'
+SET_AUTO_CHG_TOPIC = 'battery/set_auto_chg_p'
 
 chg_percent = 0
 pv_p = 0
+auto_chg_p = False
 
 
 def update_chg_p():
@@ -52,6 +55,15 @@ def on_message(mqttc, obj, msg):
     if msg.topic == PV_P_TOPIC:
         pv_p = int(msg.payload)
         
+    if msg.topic == SET_AUTO_CHG_TOPIC:
+        if msg.payload = 'True':
+            auto_chg_p = True
+        else:
+            auto_chg_p = False
+            
+        (result, mid) = mqttc.publish(AUTO_CHG_TOPIC, msg.payload, 0)
+        logging.debug("Pubish Result: {} MID: {} for {}: {}".format(result, mid, AUTO_CHG_TOPIC, msg.payload))  # noqa E501
+        
     logging.debug("{} {} {}".format(msg.topic, str(msg.qos), str(msg.payload))) # noqa E501
 
 
@@ -71,7 +83,8 @@ if __name__ == '__main__':
     mqttc.loop_start()
     while True:
         try:
-            update_chg_p()
+            if auto_chg_p:
+                update_chg_p()
             time.sleep(FREQUENCY)
         except KeyboardInterrupt:
             break
