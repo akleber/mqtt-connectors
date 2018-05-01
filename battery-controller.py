@@ -7,6 +7,7 @@ import time
 import logging
 import sys
 import datetime
+import math
 
 BROKER_HOST = 'raspberrypi.fritz.box'
 BROKER_PORT = 1883
@@ -55,7 +56,7 @@ def on_message(mqttc, obj, msg):
         logging.debug("got new chg_percent: {}".format(chg_percent)) # noqa E501
        
     if msg.topic == PV_P_TOPIC:
-        pv_p = int(msg.payload)
+        pv_p = math.floor(float(msg.payload))
         logging.debug("got new pv_p: {}".format(pv_p)) # noqa E501
         
     if msg.topic == SET_AUTO_CHG_TOPIC:
