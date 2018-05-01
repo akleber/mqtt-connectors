@@ -81,6 +81,7 @@ if __name__ == '__main__':
     mqttc.on_message = on_message
     mqttc.subscribe(PV_P_TOPIC, 0)
     mqttc.subscribe(CHG_PERCENT_TOPIC, 0)
+    mqttc.subscribe(SET_AUTO_CHG_TOPIC, 0)
 
     mqttc.loop_start()
     while True:
