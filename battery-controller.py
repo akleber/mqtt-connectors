@@ -54,21 +54,21 @@ def on_message(mqttc, obj, msg):
     if msg.topic == CHG_PERCENT_TOPIC:
         global chg_percent
         chg_percent = math.floor(float(msg.payload))
-        logging.debug("got new chg_percent: {}".format(chg_percent)) # noqa E501
+        #logging.debug("got new chg_percent: {}".format(chg_percent)) # noqa E501
        
     if msg.topic == PV_P_TOPIC:
         global ov_p
         pv_p = math.floor(float(msg.payload))
-        logging.debug("got new pv_p: {}".format(pv_p)) # noqa E501
+        #logging.debug("got new pv_p: {}".format(pv_p)) # noqa E501
         
     if msg.topic == SET_AUTO_CHG_TOPIC:
         global auto_chg_p
         if msg.payload == b'True':
             auto_chg_p = True
-            logging.debug("auto_chg_p true")
+            #logging.debug("auto_chg_p true")
         else:
             auto_chg_p = False
-            logging.debug("auto_chg_p false")
+            #logging.debug("auto_chg_p false")
             
         (result, mid) = mqttc.publish(AUTO_CHG_TOPIC, msg.payload, 0)
         logging.debug("Pubish Result: {} MID: {} for {}: {}".format(result, mid, AUTO_CHG_TOPIC, msg.payload))  # noqa E501
