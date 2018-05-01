@@ -15,7 +15,7 @@ MAX_CHG_P = 2500
 MAX_AC_P = 2900
 PV_P_TOPIC = 'fronius/p_pv'
 SET_CHG_P_TOPIC = 'battery/set/chg_p'
-CHG_PPRRCENT_TOPIC = 'battery/chg_p'
+CHG_PERCENT_TOPIC = 'battery/chg_p'
 AUTO_CHG_TOPIC = 'battery/auto_chg_p'
 SET_AUTO_CHG_TOPIC = 'battery/set_auto_chg_p'
 
