@@ -60,6 +60,7 @@ def on_message(mqttc, obj, msg):
         logging.debug("got new pv_p: {}".format(pv_p)) # noqa E501
         
     if msg.topic == SET_AUTO_CHG_TOPIC:
+        glibal auto_chg_p
         if msg.payload == b'True':
             auto_chg_p = True
             logging.debug("auto_chg_p true")
