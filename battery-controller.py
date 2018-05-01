@@ -6,7 +6,7 @@ import paho.mqtt.client as paho  # pip install paho-mqtt
 import time
 import logging
 import sys
-import datetim
+import datetime
 
 BROKER_HOST = 'raspberrypi.fritz.box'
 BROKER_PORT = 1883
