@@ -27,9 +27,9 @@ auto_chg_p = False
 def update_chg_p():
 
     now = datetime.datetime.now()
-    today1500 = now.replace(hour=15, minute=0, second=0, microsecond=0)
+    today1600 = now.replace(hour=16, minute=0, second=0, microsecond=0)
     today1030 = now.replace(hour=10, minute=30, second=0, microsecond=0)
-    if now > today1030 and now < today1500:
+    if now > today1030 and now < today1600:
         new_chg_p = pv_p - MAX_AC_P
         new_chg_percent = int((100 * new_chg_p) / MAX_CHG_P)
         
@@ -40,7 +40,7 @@ def update_chg_p():
             new_chg_percent = 100
           
     else:
-        # charge unlimited after 15:00
+        # charge unlimited after 16:00
         new_chg_percent = 100
 
     if new_chg_percent != chg_percent:
