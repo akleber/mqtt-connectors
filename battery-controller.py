@@ -70,7 +70,7 @@ def on_message(mqttc, obj, msg):
 
 
 if __name__ == '__main__':
-    logging.basicConfig(stream=sys.stderr, level=logging.INFO)
+    logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 
     mqttc = paho.Client('battery-controller', clean_session=True)
     # mqttc.enable_logger()
