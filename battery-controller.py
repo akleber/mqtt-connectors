@@ -26,22 +26,23 @@ auto_chg_p = False
 
 def update_chg_p():
 
+    new_chg_percent = 100 #if in doubt, no limit
+    
     now = datetime.datetime.now()
     today1600 = now.replace(hour=16, minute=0, second=0, microsecond=0)
     today1030 = now.replace(hour=10, minute=30, second=0, microsecond=0)
     if now > today1030 and now < today1600:
         new_chg_p = pv_p - MAX_AC_P
         new_chg_percent = int((100 * new_chg_p) / MAX_CHG_P)
+        logging.debug("computed new_chg_percent: {}".format(new_chg_percent)) # noqa E501
         
         if new_chg_percent < 10:
             new_chg_percent = 10
         
         if new_chg_percent > 100:
             new_chg_percent = 100
-          
-    else:
-        # charge unlimited after 16:00
-        new_chg_percent = 100
+
+    logging.debug("final new_chg_percent: {}".format(new_chg_percent)) # noqa E501
 
     if new_chg_percent != chg_percent:
         (result, mid) = mqttc.publish(SET_CHG_P_TOPIC, str(new_chg_percent), 0) # noqa E501
@@ -51,9 +52,11 @@ def update_chg_p():
 def on_message(mqttc, obj, msg):
     if msg.topic == CHG_PERCENT_TOPIC:
         chg_percent = int(msg.payload)
+        logging.debug("got new chg_percent: {}".format(chg_percent)) # noqa E501
        
     if msg.topic == PV_P_TOPIC:
         pv_p = int(msg.payload)
+        logging.debug("got new pv_p: {}".format(pv_p)) # noqa E501
         
     if msg.topic == SET_AUTO_CHG_TOPIC:
         if msg.payload = 'True':
@@ -63,8 +66,6 @@ def on_message(mqttc, obj, msg):
             
         (result, mid) = mqttc.publish(AUTO_CHG_TOPIC, msg.payload, 0)
         logging.debug("Pubish Result: {} MID: {} for {}: {}".format(result, mid, AUTO_CHG_TOPIC, msg.payload))  # noqa E501
-        
-    logging.debug("{} {} {}".format(msg.topic, str(msg.qos), str(msg.payload))) # noqa E501
 
 
 if __name__ == '__main__':
