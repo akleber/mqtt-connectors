@@ -18,7 +18,7 @@ PV_P_TOPIC = 'fronius/p_pv'
 SET_CHG_P_TOPIC = 'battery/set/chg_p'
 CHG_PERCENT_TOPIC = 'battery/chg_p'
 AUTO_CHG_TOPIC = 'battery/auto_chg_p'
-SET_AUTO_CHG_TOPIC = 'battery/set_auto_chg_p'
+SET_AUTO_CHG_TOPIC = 'battery/set/auto_chg_p'
 
 chg_percent = 0
 pv_p = 0
