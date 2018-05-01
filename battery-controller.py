@@ -62,8 +62,10 @@ def on_message(mqttc, obj, msg):
     if msg.topic == SET_AUTO_CHG_TOPIC:
         if str(msg.payload) == 'True':
             auto_chg_p = True
+            logging.debug("auto_chg_p true")
         else:
             auto_chg_p = False
+            logging.debug("auto_chg_p false")
             
         (result, mid) = mqttc.publish(AUTO_CHG_TOPIC, msg.payload, 0)
         logging.debug("Pubish Result: {} MID: {} for {}: {}".format(result, mid, AUTO_CHG_TOPIC, msg.payload))  # noqa E501
