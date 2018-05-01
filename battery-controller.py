@@ -59,7 +59,7 @@ def on_message(mqttc, obj, msg):
         logging.debug("got new pv_p: {}".format(pv_p)) # noqa E501
         
     if msg.topic == SET_AUTO_CHG_TOPIC:
-        if msg.payload = 'True':
+        if msg.payload == 'True':
             auto_chg_p = True
         else:
             auto_chg_p = False
