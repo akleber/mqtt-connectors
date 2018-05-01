@@ -52,7 +52,7 @@ def update_chg_p():
 
 def on_message(mqttc, obj, msg):
     if msg.topic == CHG_PERCENT_TOPIC:
-        chg_percent = int(msg.payload)
+        chg_percent = math.floor(float(msg.payload))
         logging.debug("got new chg_percent: {}".format(chg_percent)) # noqa E501
        
     if msg.topic == PV_P_TOPIC:
