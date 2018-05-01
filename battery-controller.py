@@ -11,7 +11,7 @@ import math
 
 BROKER_HOST = 'raspberrypi.fritz.box'
 BROKER_PORT = 1883
-FREQUENCY = 10
+FREQUENCY = 60
 MAX_CHG_P = 2500
 MAX_AC_P = 2900
 PV_P_TOPIC = 'fronius/p_pv'
