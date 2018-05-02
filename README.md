@@ -1,11 +1,13 @@
 # fronius-mqtt-bridge
 
-Python script to fetch power flow realtime data from a fronius data manager API and pubish it to a mqtt broker.
+Python scripts
+* to fetch data from various APIs like power flow realtime data from a fronius data manager and pubish it to a mqtt broker.
+* for implementing controll-algorithms based on and setting via mqtt topics
 
 I use it with [this setup](doc/setup.md).
 
 # Requirements
-* Tested with Python 3.5
+* Tested with Python 3.5 on raspian
 
 # Usage
 Create, activate and setup venv:
@@ -17,20 +19,22 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-Then set the right hostnames or ip addresss and ports in fronius-mqtt-bridge.py and run:
+Then set the right hostnames or ip addresss and ports in all python files that will be used and run for example:
 
 ```
-python3 fronius-mqtt-bridge.py
+python3 fronius-connector.py
 ```
+
+The scripts will run in an infinite loop until an error happens or they are aborted via Ctrl+C.
 
 # Acknowledgement
 * [Jan-Piet Mens](https://jpmens.net/2013/03/10/visualizing-energy-consumption-with-mqtt/) for the inspiration for the script.
+* Juraj's [battsett.jar](https://github.com/jandrassy/battsett)
 
 # ToDo
 
 * pubish only if a client is connected to the broker
-* add last will
 * document my setup
-* add connector for sunrise https://sunrise-sunset.org/api
+* add connector for sunrise
 * add connector for Zoe battery status
 
