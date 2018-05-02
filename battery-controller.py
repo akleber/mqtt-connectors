@@ -35,7 +35,7 @@ def update_chg_p():
     if now > today1030 and now < today1600:
         new_chg_p = pv_p - MAX_AC_P
         new_chg_percent = math.ceil((100 * new_chg_p) / MAX_CHG_P)
-        logging.debug("computed new_chg_percent: {}".format(new_chg_percent)) # noqa E501
+        # logging.debug("computed new_chg_percent: {}".format(new_chg_percent)) # noqa E501
 
         if new_chg_percent < 10:
             new_chg_percent = 10
@@ -43,7 +43,7 @@ def update_chg_p():
         if new_chg_percent > 100:
             new_chg_percent = 100
 
-    logging.debug("final new_chg_percent: {}".format(new_chg_percent)) # noqa E501
+    # logging.debug("final new_chg_percent: {}".format(new_chg_percent)) # noqa E501
 
     if new_chg_percent != chg_percent:
         (result, mid) = mqttc.publish(SET_CHG_P_TOPIC, str(new_chg_percent), 0) # noqa E501
