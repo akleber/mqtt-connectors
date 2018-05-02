@@ -27,19 +27,19 @@ auto_chg_p = False
 
 def update_chg_p():
 
-    new_chg_percent = 100 #if in doubt, no limit
-    
+    new_chg_percent = 100  # if in doubt, no limit
+
     now = datetime.datetime.now()
     today1600 = now.replace(hour=16, minute=0, second=0, microsecond=0)
     today1030 = now.replace(hour=10, minute=30, second=0, microsecond=0)
     if now > today1030 and now < today1600:
         new_chg_p = pv_p - MAX_AC_P
-        new_chg_percent = int((100 * new_chg_p) / MAX_CHG_P)
+        new_chg_percent = math.ceil((100 * new_chg_p) / MAX_CHG_P)
         logging.debug("computed new_chg_percent: {}".format(new_chg_percent)) # noqa E501
-        
+
         if new_chg_percent < 10:
             new_chg_percent = 10
-        
+
         if new_chg_percent > 100:
             new_chg_percent = 100
 
@@ -55,21 +55,21 @@ def on_message(mqttc, obj, msg):
         global chg_percent
         chg_percent = math.floor(float(msg.payload))
         #logging.debug("got new chg_percent: {}".format(chg_percent)) # noqa E501
-       
+
     if msg.topic == PV_P_TOPIC:
-        global ov_p
+        global pv_p
         pv_p = math.floor(float(msg.payload))
         #logging.debug("got new pv_p: {}".format(pv_p)) # noqa E501
-        
+
     if msg.topic == SET_AUTO_CHG_TOPIC:
         global auto_chg_p
         if msg.payload == b'True':
             auto_chg_p = True
-            #logging.debug("auto_chg_p true")
+            # logging.debug("auto_chg_p true")
         else:
             auto_chg_p = False
-            #logging.debug("auto_chg_p false")
-            
+            # logging.debug("auto_chg_p false")
+
         (result, mid) = mqttc.publish(AUTO_CHG_TOPIC, msg.payload, 0)
         logging.debug("Pubish Result: {} MID: {} for {}: {}".format(result, mid, AUTO_CHG_TOPIC, msg.payload))  # noqa E501
 
@@ -79,10 +79,10 @@ if __name__ == '__main__':
 
     mqttc = paho.Client('battery-controller', clean_session=True)
     # mqttc.enable_logger()
-    
+
     mqttc.connect(BROKER_HOST, BROKER_PORT, 60)
     logging.info("Connected to {}:{}".format(BROKER_HOST, BROKER_PORT))
-    
+
     mqttc.on_message = on_message
     mqttc.subscribe(PV_P_TOPIC, 0)
     mqttc.subscribe(CHG_PERCENT_TOPIC, 0)
