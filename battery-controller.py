@@ -46,7 +46,7 @@ def update_chg_p():
     # logging.debug("final new_chg_percent: {}".format(new_chg_percent)) # noqa E501
 
     if new_chg_percent != chg_percent:
-        (result, mid) = mqttc.publish(SET_CHG_P_TOPIC, str(new_chg_percent), 0) # noqa E501
+        (result, mid) = mqttc.publish(SET_CHG_P_TOPIC, str(new_chg_percent), 0, retain = True) # noqa E501
         logging.debug("Pubish Result: {} MID: {} for {}: {}".format(result, mid, SET_CHG_P_TOPIC, new_chg_percent)) # noqa E501
 
 
@@ -70,7 +70,7 @@ def on_message(mqttc, obj, msg):
             auto_chg_p = False
             # logging.debug("auto_chg_p false")
 
-        (result, mid) = mqttc.publish(AUTO_CHG_TOPIC, msg.payload, 0)
+        (result, mid) = mqttc.publish(AUTO_CHG_TOPIC, msg.payload, 0, retain = True)
         logging.debug("Pubish Result: {} MID: {} for {}: {}".format(result, mid, AUTO_CHG_TOPIC, msg.payload))  # noqa E501
 
 
