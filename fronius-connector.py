@@ -34,6 +34,9 @@ def fronius_data():
         values['battery_mode'] = powerflow_data['Body']['Data']['Inverters']['1']['Battery_Mode']
         values['e_day'] = powerflow_data['Body']['Data']['Inverters']['1']['E_Day'] / 1000
 
+        # handling for null/None values
+        for k, v in values.items():
+            if v is None: values[k] = 0
 
     except requests.exceptions.Timeout:
         print("Timeout requesting {}".format(url))
