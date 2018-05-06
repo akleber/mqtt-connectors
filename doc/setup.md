@@ -17,3 +17,16 @@ To update supervisor with changes run
 supervisorctl reread
 supervisorctl update
 ```
+
+# Deploy
+
+Via git push to the rpi.
+On the rpi:
+
+```
+git config --local receive.denyCurrentBranch updateInstead
+```
+
+Hook wip 
+
+
