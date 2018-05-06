@@ -37,8 +37,8 @@ def battery_data():
     r = client.read_holding_registers(40327 - 1, 2, unit=1)
     inWRte = BinaryPayloadDecoder.fromRegisters(r.registers, byteorder=Endian.Big) # noqa E501
 
-    values['chg_p'] = inWRte.decode_16bit_uint() / 100
-    logging.debug("batt_chg_p {}%".format(values['chg_p']))
+    values['chg_pct'] = inWRte.decode_16bit_uint() / 100
+    logging.info("From modbus chg_pct {}%".format(values['chg_pct']))
 
     client.close()
 
@@ -46,20 +46,23 @@ def battery_data():
 
 
 def on_message(mqttc, obj, msg):
-    if msg.topic == "battery/set/chg_p":
+    if msg.topic == "{}/set/chg_pct".format(BATTERY_MQTT_PREFIX):
         newValue = int(msg.payload) * 100
         client = ModbusClient(MODBUS_HOST, port=502)
         client.connect()
         client.write_register(40327 - 1, newValue, unit=1)
         client.close()
 
-        logging.debug("{} {} {}".format(msg.topic, str(msg.qos), str(msg.payload))) # noqa E501
+        logging.info("Setting via modbus chg_pct: {}".format(newValue)) # noqa E501
 
 
 if __name__ == '__main__':
-    logging.basicConfig(stream=sys.stderr, level=logging.INFO)
+    logging.basicConfig(stream=sys.stdout,
+        format='%(asctime)s %(levelname)-8s %(message)s',
+        datefmt='%Y-%m-%d %H:%M:%S',
+        level=logging.INFO)
 
-    mqttc = paho.Client('battery-mqtt-connector', clean_session=True)
+    mqttc = paho.Client('battery-connector', clean_session=True)
     # mqttc.enable_logger()
     mqttc.will_set("{}/connectorstatus".format(BATTERY_MQTT_PREFIX), "LOST_CONNECTION", 0, retain=True) # noqa E501
 
@@ -69,7 +72,7 @@ if __name__ == '__main__':
     mqttc.publish("{}/connectorstatus".format(BATTERY_MQTT_PREFIX), "ON-LINE", retain=True) # noqa E501
 
     mqttc.on_message = on_message
-    mqttc.subscribe("{}/set/chg_p".format(BATTERY_MQTT_PREFIX), 0)
+    mqttc.subscribe("{}/set/chg_pct".format(BATTERY_MQTT_PREFIX), 0)
 
     mqttc.loop_start()
     while True:
@@ -77,7 +80,7 @@ if __name__ == '__main__':
             values = battery_data()
             for k, v in values.items():
                 (result, mid) = mqttc.publish("{}/{}".format(BATTERY_MQTT_PREFIX, k), str(v), 0) # noqa E501
-                logging.debug("Pubish Result: {} MID: {} for {}: {}".format(result, mid, k, v)) # noqa E501
+                logging.info("Pubish Result: {} MID: {} for {}: {}".format(result, mid, k, v)) # noqa E501
 
             time.sleep(FREQUENCY)
         except KeyboardInterrupt:
