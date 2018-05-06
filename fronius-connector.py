@@ -47,7 +47,7 @@ if __name__ == '__main__':
     logging.basicConfig(stream=sys.stderr, level=logging.INFO)
     logging.getLogger("urllib3").setLevel(logging.INFO)
 
-    mqttc = paho.Client('fronius-mqtt-connector', clean_session=True)
+    mqttc = paho.Client('fronius-connector', clean_session=True)
     # mqttc.enable_logger()
     mqttc.will_set("{}/connectorstatus".format(FRONIUS_MQTT_PREFIX), "LOST_CONNECTION", 0, retain=True)
 
