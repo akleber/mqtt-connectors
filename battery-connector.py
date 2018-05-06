@@ -38,7 +38,7 @@ def battery_data():
     inWRte = BinaryPayloadDecoder.fromRegisters(r.registers, byteorder=Endian.Big) # noqa E501
 
     values['chg_pct'] = inWRte.decode_16bit_uint() / 100
-    logging.info("From modbus chg_pct {}%".format(values['chg_pct']))
+    logging.debug("From modbus chg_pct {}%".format(values['chg_pct']))
 
     client.close()
 
