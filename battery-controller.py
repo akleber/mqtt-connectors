@@ -13,7 +13,7 @@ BROKER_HOST = 'raspberrypi.fritz.box'
 BROKER_PORT = 1883
 FREQUENCY = 60
 MAX_CHG_P = 2500
-MAX_AC_P = 2900
+MAX_AC_P = 3000
 PV_P_TOPIC = 'fronius/p_pv'
 SET_CHG_P_TOPIC = 'battery/set/chg_pct'
 CHG_PCT_TOPIC = 'battery/chg_pct'
@@ -45,11 +45,11 @@ def update_chg_p():
         if new_chg_pct > 100:
             new_chg_pct = 100
 
-    logging.info("final new_chg_pct: {}".format(new_chg_pct)) # noqa E501
+    logging.debug("final new_chg_pct: {}".format(new_chg_pct)) # noqa E501
 
     if new_chg_pct != chg_pct:
         (result, mid) = mqttc.publish(SET_CHG_P_TOPIC, str(new_chg_pct), 0, retain = True) # noqa E501
-        logging.info("Pubish Result: {} for {}: {}".format(result, SET_CHG_P_TOPIC, new_chg_pct)) # noqa E501
+        logging.debug("Pubish Result: {} for {}: {}".format(result, SET_CHG_P_TOPIC, new_chg_pct)) # noqa E501
 
 
 def on_message(mqttc, obj, msg):
@@ -69,7 +69,7 @@ def on_message(mqttc, obj, msg):
             auto_chg_pct = True
         else:
             auto_chg_pct = False
-        logging.info("got new auto_chg_pct: {}".format(auto_chg_pct)) # noqa E501
+        logging.debug("got new auto_chg_pct: {}".format(auto_chg_pct)) # noqa E501
 
 
 if __name__ == '__main__':

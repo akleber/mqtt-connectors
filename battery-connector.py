@@ -53,7 +53,7 @@ def on_message(mqttc, obj, msg):
         client.write_register(40327 - 1, newValue, unit=1)
         client.close()
 
-        logging.info("Setting via modbus chg_pct: {}".format(newValue)) # noqa E501
+        logging.debug("Setting via modbus chg_pct: {}".format(newValue)) # noqa E501
 
 
 if __name__ == '__main__':
@@ -64,12 +64,12 @@ if __name__ == '__main__':
 
     mqttc = paho.Client('battery-connector', clean_session=True)
     # mqttc.enable_logger()
-    mqttc.will_set("{}/connectorstatus".format(BATTERY_MQTT_PREFIX), "LOST_CONNECTION", 0, retain=True) # noqa E501
+    mqttc.will_set("{}/connectorstatus".format(BATTERY_MQTT_PREFIX), "Battery Connector: LOST_CONNECTION", 0, retain=True) # noqa E501
 
     mqttc.connect(BROKER_HOST, BROKER_PORT, 60)
     logging.info("Connected to {}:{}".format(BROKER_HOST, BROKER_PORT))
 
-    mqttc.publish("{}/connectorstatus".format(BATTERY_MQTT_PREFIX), "ON-LINE", retain=True) # noqa E501
+    mqttc.publish("{}/connectorstatus".format(BATTERY_MQTT_PREFIX), "Battery Connector: ON-LINE", retain=True) # noqa E501
 
     mqttc.on_message = on_message
     mqttc.subscribe("{}/set/chg_pct".format(BATTERY_MQTT_PREFIX), 0)
@@ -88,7 +88,7 @@ if __name__ == '__main__':
         except Exception:
             raise
 
-    mqttc.publish("{}/connectorstatus".format(BATTERY_MQTT_PREFIX), "OFF-LINE", retain=True) # noqa E501
+    mqttc.publish("{}/connectorstatus".format(BATTERY_MQTT_PREFIX), "Battery Connector: OFF-LINE", retain=True) # noqa E501
 
     mqttc.disconnect()
     mqttc.loop_stop()  # waits, until DISCONNECT message is sent out

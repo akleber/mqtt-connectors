@@ -16,6 +16,7 @@ BROKER_HOST = 'raspberrypi.fritz.box'
 BROKER_PORT = 1883
 FREQUENCY = 2
 
+
 def fronius_data():
 
     values = {}
@@ -25,7 +26,7 @@ def fronius_data():
         r = requests.get(url, timeout=FREQUENCY - 0.5)
         r.raise_for_status()
         powerflow_data = r.json()
-        
+
         values['p_pv'] = powerflow_data['Body']['Data']['Site']['P_PV']
         values['p_grid'] = powerflow_data['Body']['Data']['Site']['P_Grid']
         values['p_akku'] = powerflow_data['Body']['Data']['Site']['P_Akku']
@@ -36,7 +37,8 @@ def fronius_data():
 
         # handling for null/None values
         for k, v in values.items():
-            if v is None: values[k] = 0
+            if v is None:
+                values[k] = 0
 
     except requests.exceptions.Timeout:
         print("Timeout requesting {}".format(url))
@@ -52,12 +54,12 @@ if __name__ == '__main__':
 
     mqttc = paho.Client('fronius-connector', clean_session=True)
     # mqttc.enable_logger()
-    mqttc.will_set("{}/connectorstatus".format(FRONIUS_MQTT_PREFIX), "LOST_CONNECTION", 0, retain=True)
+    mqttc.will_set("{}/connectorstatus".format(FRONIUS_MQTT_PREFIX), "Fronius Connector: LOST_CONNECTION", 0, retain=True)
 
     mqttc.connect(BROKER_HOST, BROKER_PORT, 60)
     logging.info("Connected to {}:{}".format(BROKER_HOST, BROKER_PORT))
 
-    mqttc.publish("{}/connectorstatus".format(FRONIUS_MQTT_PREFIX), "ON-LINE", retain=True)
+    mqttc.publish("{}/connectorstatus".format(FRONIUS_MQTT_PREFIX), "Fronius Connector: ON-LINE", retain=True)
 
     mqttc.loop_start()
     while True:
@@ -73,7 +75,7 @@ if __name__ == '__main__':
         except Exception:
             raise
 
-    mqttc.publish("{}/connectorstatus".format(FRONIUS_MQTT_PREFIX), "OFF-LINE", retain=True)
+    mqttc.publish("{}/connectorstatus".format(FRONIUS_MQTT_PREFIX), "Fronius Connector: OFF-LINE", retain=True)
 
     mqttc.disconnect()
     mqttc.loop_stop()  # waits, until DISCONNECT message is sent out

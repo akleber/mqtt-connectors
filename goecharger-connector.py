@@ -27,9 +27,8 @@ def goecharger_data():
         r = requests.get(url, timeout=FREQUENCY - 0.5)
         r.raise_for_status()
         j = r.json()
-        
-        values['power_sum'] = (j['nrg'][7] + j['nrg'][8] + j['nrg'][9]) / 10
 
+        values['power_sum'] = (j['nrg'][7] + j['nrg'][8] + j['nrg'][9]) / 10
 
     except requests.exceptions.Timeout:
         print("Timeout requesting {}".format(url))
@@ -45,12 +44,12 @@ if __name__ == '__main__':
 
     mqttc = paho.Client('goecharger-mqtt-connector', clean_session=True)
     # mqttc.enable_logger()
-    mqttc.will_set("{}/connectorstatus".format(GOECHARGER_MQTT_PREFIX), "LOST_CONNECTION", 0, retain=True)
+    mqttc.will_set("{}/connectorstatus".format(GOECHARGER_MQTT_PREFIX), "go-eCharger Connector: LOST_CONNECTION", 0, retain=True)
 
     mqttc.connect(BROKER_HOST, BROKER_PORT, 60)
     logging.info("Connected to {}:{}".format(BROKER_HOST, BROKER_PORT))
 
-    mqttc.publish("{}/connectorstatus".format(GOECHARGER_MQTT_PREFIX), "ON-LINE", retain=True)
+    mqttc.publish("{}/connectorstatus".format(GOECHARGER_MQTT_PREFIX), "go-eCharger Connector: ON-LINE", retain=True)
 
     mqttc.loop_start()
     while True:
@@ -66,7 +65,7 @@ if __name__ == '__main__':
         except Exception:
             raise
 
-    mqttc.publish("{}/connectorstatus".format(GOECHARGER_MQTT_PREFIX), "OFF-LINE", retain=True)
+    mqttc.publish("{}/connectorstatus".format(GOECHARGER_MQTT_PREFIX), "go-eCharger Connector: OFF-LINE", retain=True)
 
     mqttc.disconnect()
     mqttc.loop_stop()  # waits, until DISCONNECT message is sent out
