@@ -29,6 +29,7 @@ def goecharger_data():
         j = r.json()
 
         values['power_sum'] = (j['nrg'][7] + j['nrg'][8] + j['nrg'][9]) / 10
+        values['cur_chg_e'] = j['dws'] / 360000  # Deka-Watt-Sec to kWh
 
     except requests.exceptions.Timeout:
         print("Timeout requesting {}".format(url))
