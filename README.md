@@ -35,6 +35,10 @@ The scripts will run in an infinite loop until an error happens or they are abor
 
 * pubish only if a client is connected to the broker
 * document my setup
-* add connector for sunrise
 * add connector for Zoe battery status
+* improve battery-controller strategy
+** take sunshine duration prognosis into accoount
+* finish config.py
+* extend goe-charger with controlling capabilities
+* add goecharger-controller to set charging power based on available pv energy.
 

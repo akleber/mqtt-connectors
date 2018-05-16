@@ -1,6 +1,20 @@
 #!/usr/bin/env python
 
-"""."""
+"""
+Controlls the charging power of a fronius battery to achieve peak shaving.
+My fronius symo hybrid 3-0.3 is capapble of 5kW input, but only
+of 3kW AC output. My 4kWp Generator is sometimes able to generate more than
+3kW and the fronius is in this case able to charge the battery with the power
+above 3kW AC.
+The fronius is not able to control how fast the battery is charged, but only allows to
+set a time when charging should be started. But then the battery is charged with full power.
+My small battery however is then full in about 1.5h. So by limitting the charging power
+I can achieve peak shaving for a longer time.
+The control strategy below sets the charging power to the power exceeding 3kW.
+With respect to a future goecharger-controller, this controller here only
+handles the power above 3kW AC. The goecharger-controller handles everything up to 3kW AC.
+So they both do not interfere.
+"""
 
 import paho.mqtt.client as paho  # pip install paho-mqtt
 import time
