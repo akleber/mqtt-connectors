@@ -41,4 +41,5 @@ The scripts will run in an infinite loop until an error happens or they are abor
 * finish config.py
 * extend goe-charger with controlling capabilities
 * add goecharger-controller to set charging power based on available pv energy.
+* allow charging if soc < 7%
 
