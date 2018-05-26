@@ -85,7 +85,7 @@ def on_message(mqttc, obj, msg):
             auto_chg_pct = False
             # reset chg_pct to 100% when auto mode is disabled
             (result, mid) = mqttc.publish(SET_CHG_PCT_TOPIC, str(100), 0, retain = True) # noqa E501
-            logging.debug("Pubish Result: {} for {}: {}".format(result, SET_CHG_P_TOPIC, new_chg_pct)) # noqa E501
+            logging.debug("Pubish Result: {} for {}: {}".format(result, SET_CHG_PCT_TOPIC, 100)) # noqa E501
         
         logging.debug("got new auto_chg_pct: {}".format(auto_chg_pct)) # noqa E501
 
