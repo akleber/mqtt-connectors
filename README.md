@@ -33,6 +33,7 @@ The scripts will run in an infinite loop until an error happens or they are abor
 
 # ToDo
 
+* One mainloop https://stackoverflow.com/a/49801719/5523503
 * pubish only if a client is connected to the broker
 * document my setup
 * add connector for Zoe battery status
