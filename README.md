@@ -30,6 +30,7 @@ The scripts will run in an infinite loop until an error happens or they are abor
 # Acknowledgement
 * [Jan-Piet Mens](https://jpmens.net/2013/03/10/visualizing-energy-consumption-with-mqtt/) for the inspiration for the script.
 * Juraj's [battsett.jar](https://github.com/jandrassy/battsett)
+* [InfluxDB Connector](https://thingsmatic.com/2017/03/02/influxdb-and-grafana-for-sensor-time-series/)
 
 # ToDo
 
