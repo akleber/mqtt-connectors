@@ -7,10 +7,10 @@ from influxdb import InfluxDBClient
 
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code "+str(rc))
-    client.subscribe("Home/#")
-    
+    client.subscribe("#")
+
 def on_message(client, userdata, msg):
-    print("Received a message on topic: " + msg.topic)
+    # print("Received a message on topic: " + msg.topic)
     # Use utc as timestamp
     receiveTime=datetime.datetime.utcnow()
     message=msg.payload.decode("utf-8")
@@ -20,11 +20,11 @@ def on_message(client, userdata, msg):
         val = float(message)
         isfloatValue=True
     except:
-        print("Could not convert " + message + " to a float value")
+        #print("Could not convert " + message + " to a float value")
         isfloatValue=False
 
     if isfloatValue:
-        print(str(receiveTime) + ": " + msg.topic + " " + str(val))
+        # print(str(receiveTime) + ": " + msg.topic + " " + str(val))
 
         json_body = [
             {
@@ -37,10 +37,13 @@ def on_message(client, userdata, msg):
         ]
 
         dbclient.write_points(json_body)
-        print("Finished writing to InfluxDB")
-        
+        # print("Finished writing to InfluxDB")
+
+print("start")
+
 # Set up a client for InfluxDB
-dbclient = InfluxDBClient('192.168.1.16', 8086, 'root', 'root', 'sensordata')
+dbclient = InfluxDBClient('localhost', 8086, 'root', 'root', 'mqtt')
+print("dbclient created")
 
 # Initialize the MQTT client that should connect to the Mosquitto broker
 client = mqtt.Client()
@@ -49,11 +52,13 @@ client.on_message = on_message
 connOK=False
 while(connOK == False):
     try:
-        client.connect("192.168.1.16", 1883, 60)
+        client.connect("localhost", 1883, 60)
         connOK = True
     except:
         connOK = False
     time.sleep(2)
+
+print("mqtt connection established")
 
 # Blocking loop to the Mosquitto broker
 client.loop_forever()
