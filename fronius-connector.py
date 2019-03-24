@@ -32,7 +32,7 @@ def fronius_data():
         values['p_akku'] = powerflow_data['Body']['Data']['Site']['P_Akku']
         values['p_load'] = -powerflow_data['Body']['Data']['Site']['P_Load']
         values['soc'] = powerflow_data['Body']['Data']['Inverters']['1'].get('SOC')
-        values['battery_mode'] = powerflow_data['Body']['Data']['Inverters']['1']['Battery_Mode']
+        values['battery_mode'] = powerflow_data['Body']['Data']['Inverters']['1'].get('Battery_Mode')
         values['e_day'] = powerflow_data['Body']['Data']['Inverters']['1']['E_Day'] / 1000
 
         # handling for null/None values
