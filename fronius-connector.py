@@ -12,9 +12,9 @@ import sys
 
 FRONIUS_HOST = 'fronius.fritz.box'
 FRONIUS_MQTT_PREFIX = 'fronius'
-BROKER_HOST = 'raspberrypi.fritz.box'
+BROKER_HOST = 'rpi3.fritz.box'
 BROKER_PORT = 1883
-FREQUENCY = 2
+FREQUENCY = 3
 
 
 def fronius_data():

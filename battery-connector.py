@@ -15,7 +15,7 @@ from pymodbus.client.sync import ModbusTcpClient as ModbusClient
 
 MODBUS_HOST = 'fronius.fritz.box'
 BATTERY_MQTT_PREFIX = 'battery'
-BROKER_HOST = 'raspberrypi.fritz.box'
+BROKER_HOST = 'rpi3.fritz.box'
 BROKER_PORT = 1883
 FREQUENCY = 10
 

@@ -5,6 +5,9 @@ import datetime
 import time
 from influxdb import InfluxDBClient
 
+BROKER_HOST = 'rpi3.fritz.box'
+BROKER_PORT = 1883
+
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code "+str(rc))
     client.subscribe("#")
@@ -52,7 +55,7 @@ client.on_message = on_message
 connOK=False
 while(connOK == False):
     try:
-        client.connect("localhost", 1883, 60)
+        client.connect(BROKER_HOST, BROKER_PORT, 60)
         connOK = True
     except:
         connOK = False

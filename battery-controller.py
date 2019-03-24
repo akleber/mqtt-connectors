@@ -23,7 +23,7 @@ import sys
 import datetime
 import math
 
-BROKER_HOST = 'raspberrypi.fritz.box'
+BROKER_HOST = 'rpi3.fritz.box'
 BROKER_PORT = 1883
 FREQUENCY = 60
 MAX_CHG_P = 2500

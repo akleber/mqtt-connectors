@@ -13,7 +13,7 @@ import sys
 
 GOECHARGER_HOST = 'go-echarger.fritz.box'
 GOECHARGER_MQTT_PREFIX = 'goe'
-BROKER_HOST = 'raspberrypi.fritz.box'
+BROKER_HOST = 'rpi3.fritz.box'
 BROKER_PORT = 1883
 FREQUENCY = 5
 

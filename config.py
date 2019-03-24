@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-BROKER_HOST = 'raspberrypi.fritz.box'
+BROKER_HOST = 'rpi3.fritz.box'
 BROKER_PORT = 1883
 
 FRONIUS_HOST = 'fronius.fritz.box'
