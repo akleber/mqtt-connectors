@@ -18,6 +18,12 @@ supervisorctl reread
 supervisorctl update
 ```
 
+Restart a script
+```
+supervisorctl restart battery-controller
+```
+
+
 # Deploy
 
 Via git push to the rpi.
