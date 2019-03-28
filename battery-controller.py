@@ -6,14 +6,15 @@ My fronius symo hybrid 3-0.3 is capapble of 5kW input, but only
 of 3kW AC output. My 4kWp Generator is sometimes able to generate more than
 3kW and the fronius is in this case able to charge the battery with the power
 above 3kW AC.
-The fronius is not able to control how fast the battery is charged, but only allows to
-set a time when charging should be started. But then the battery is charged with full power.
-My small battery however is then full in about 1.5h. So by limitting the charging power
-I can achieve peak shaving for a longer time.
+The fronius is not able to control how fast the battery is charged, but only
+allows to set a time when charging should be started. But then the battery is
+charged with full power.
+My small battery however is then full in about 1.5h. So by limitting the
+charging power I can achieve peak shaving for a longer time.
 The control strategy below sets the charging power to the power exceeding 3kW.
 With respect to a future goecharger-controller, this controller here only
-handles the power above 3kW AC. The goecharger-controller handles everything up to 3kW AC.
-So they both do not interfere.
+handles the power above 3kW AC. The goecharger-controller handles everything
+up to 3kW AC. So they both do not interfere.
 """
 
 import paho.mqtt.client as paho  # pip install paho-mqtt
@@ -25,7 +26,7 @@ import math
 
 BROKER_HOST = 'rpi3.fritz.box'
 BROKER_PORT = 1883
-FREQUENCY = 60
+FREQUENCY = 300
 MAX_CHG_P = 2500
 MAX_AC_P = 3000
 PV_P_TOPIC = 'fronius/p_pv'
@@ -43,12 +44,12 @@ def update_chg_p():
     new_chg_pct = 100  # if in doubt, no limit
 
     now = datetime.datetime.now()
-    today1600 = now.replace(hour=16, minute=0, second=0, microsecond=0)
-    today1030 = now.replace(hour=10, minute=30, second=0, microsecond=0)
-    if now < today1030:
+    afternoon = now.replace(hour=15, minute=0, second=0, microsecond=0)
+    morning = now.replace(hour=9, minute=30, second=0, microsecond=0)
+    if now < morning:
         new_chg_pct = 0
 
-    if now >= today1030 and now < today1600:
+    if now >= morning and now < afternoon:
         new_chg_p = pv_p - MAX_AC_P
         new_chg_pct = math.ceil((100 * new_chg_p) / MAX_CHG_P)
         # logging.debug("computed new_chg_pct: {}".format(new_chg_pct)) # noqa E501
@@ -86,15 +87,15 @@ def on_message(mqttc, obj, msg):
             # reset chg_pct to 100% when auto mode is disabled
             (result, mid) = mqttc.publish(SET_CHG_PCT_TOPIC, str(100), 0, retain = True) # noqa E501
             logging.debug("Pubish Result: {} for {}: {}".format(result, SET_CHG_PCT_TOPIC, 100)) # noqa E501
-        
+
         logging.debug("got new auto_chg_pct: {}".format(auto_chg_pct)) # noqa E501
 
 
 if __name__ == '__main__':
     logging.basicConfig(stream=sys.stdout,
-        format='%(asctime)s %(levelname)-8s %(message)s',
-        datefmt='%Y-%m-%d %H:%M:%S',
-        level=logging.INFO)
+                        format='%(asctime)s %(levelname)-8s %(message)s',
+                        datefmt='%Y-%m-%d %H:%M:%S',
+                        level=logging.INFO)
 
     mqttc = paho.Client('battery-controller', clean_session=True)
     # mqttc.enable_logger()
