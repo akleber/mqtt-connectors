@@ -26,7 +26,7 @@ import math
 
 BROKER_HOST = 'rpi3.fritz.box'
 BROKER_PORT = 1883
-FREQUENCY = 300
+FREQUENCY = 600
 MAX_CHG_P = 2500
 MAX_AC_P = 3000
 PV_P_TOPIC = 'fronius/p_pv'
@@ -37,6 +37,14 @@ AUTO_CHG_TOPIC = 'battery/auto_chg_pct'
 chg_pct = 0
 pv_p = 0
 auto_chg_pct = False
+
+
+def publish_chg_pct(pct):
+    (result, mid) = mqttc.publish(SET_CHG_PCT_TOPIC,
+                                  str(pct), 0, retain=True)
+    logging.debug("Pubish Result: {} for {}: {}".format(result,
+                                                        SET_CHG_PCT_TOPIC,
+                                                        pct))
 
 
 def update_chg_p():
@@ -52,7 +60,7 @@ def update_chg_p():
     if now >= morning and now < afternoon:
         new_chg_p = pv_p - MAX_AC_P
         new_chg_pct = math.ceil((100 * new_chg_p) / MAX_CHG_P)
-        # logging.debug("computed new_chg_pct: {}".format(new_chg_pct)) # noqa E501
+        # logging.debug("computed new_chg_pct: {}".format(new_chg_pct))
 
         if new_chg_pct < 10:
             new_chg_pct = 10
@@ -60,23 +68,22 @@ def update_chg_p():
         if new_chg_pct > 100:
             new_chg_pct = 100
 
-    logging.debug("final new_chg_pct: {}".format(new_chg_pct)) # noqa E501
+    logging.debug("final new_chg_pct: {}".format(new_chg_pct))
 
     if new_chg_pct != chg_pct:
-        (result, mid) = mqttc.publish(SET_CHG_PCT_TOPIC, str(new_chg_pct), 0, retain = True) # noqa E501
-        logging.debug("Pubish Result: {} for {}: {}".format(result, SET_CHG_PCT_TOPIC, new_chg_pct)) # noqa E501
+        publish_chg_pct(new_chg_pct)
 
 
 def on_message(mqttc, obj, msg):
     if msg.topic == CHG_PCT_TOPIC:
         global chg_pct
         chg_pct = math.floor(float(msg.payload))
-        logging.debug("got new chg_pct: {}".format(chg_pct)) # noqa E501
+        logging.debug("got new chg_pct: {}".format(chg_pct))
 
     if msg.topic == PV_P_TOPIC:
         global pv_p
         pv_p = math.floor(float(msg.payload))
-        logging.debug("got new pv_p: {}".format(pv_p)) # noqa E501
+        logging.debug("got new pv_p: {}".format(pv_p))
 
     if msg.topic == AUTO_CHG_TOPIC:
         global auto_chg_pct
@@ -85,10 +92,9 @@ def on_message(mqttc, obj, msg):
         else:
             auto_chg_pct = False
             # reset chg_pct to 100% when auto mode is disabled
-            (result, mid) = mqttc.publish(SET_CHG_PCT_TOPIC, str(100), 0, retain = True) # noqa E501
-            logging.debug("Pubish Result: {} for {}: {}".format(result, SET_CHG_PCT_TOPIC, 100)) # noqa E501
+            publish_chg_pct(100)
 
-        logging.debug("got new auto_chg_pct: {}".format(auto_chg_pct)) # noqa E501
+        logging.debug("got new auto_chg_pct: {}".format(auto_chg_pct))
 
 
 if __name__ == '__main__':
