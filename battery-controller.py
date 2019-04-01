@@ -33,45 +33,65 @@ PV_P_TOPIC = 'fronius/p_pv'
 SET_CHG_PCT_TOPIC = 'battery/set/chg_pct'
 CHG_PCT_TOPIC = 'battery/chg_pct'
 AUTO_CHG_TOPIC = 'battery/auto_chg_pct'
+SOC_TOPIC = 'fronius/soc'
 
 chg_pct = 0
 pv_p = 0
 auto_chg_pct = False
+soc = 0
 
 
 def publish_chg_pct(pct):
-    (result, mid) = mqttc.publish(SET_CHG_PCT_TOPIC,
-                                  str(pct), 0, retain=True)
-    logging.debug("Pubish Result: {} for {}: {}".format(result,
-                                                        SET_CHG_PCT_TOPIC,
-                                                        pct))
+    if pct != chg_pct:
+        (result, mid) = mqttc.publish(SET_CHG_PCT_TOPIC,
+                                      str(pct), 0, retain=True)
+        logging.debug("Pubish Result: {} for {}: {}".format(result,
+                                                            SET_CHG_PCT_TOPIC,
+                                                            pct))
 
 
 def update_chg_p():
 
-    new_chg_pct = 100  # if in doubt, no limit
+    # if soc < 30% set charging to 50%
+    # Keep some energy in battery to support peak demands
+    if soc < 30:
+        publish_chg_pct(50)
+        return
 
     now = datetime.datetime.now()
     afternoon = now.replace(hour=15, minute=0, second=0, microsecond=0)
     morning = now.replace(hour=9, minute=30, second=0, microsecond=0)
-    if now < morning:
-        new_chg_pct = 0
 
+    # In the morning (before 9:30) no charging
+    # Reserver space in battery for peak shaving
+    if now < morning:
+        publish_chg_pct(0)
+        return
+
+    # At noon adaptive charging (see below)
+    # Prevent peak shaving as long as possible by not charging the battery
+    # to quickly
     if now >= morning and now < afternoon:
         new_chg_p = pv_p - MAX_AC_P
         new_chg_pct = math.ceil((100 * new_chg_p) / MAX_CHG_P)
-        # logging.debug("computed new_chg_pct: {}".format(new_chg_pct))
 
+        # bring new_chg_pct between 10 and 100
         if new_chg_pct < 10:
             new_chg_pct = 10
-
         if new_chg_pct > 100:
             new_chg_pct = 100
 
-    logging.debug("final new_chg_pct: {}".format(new_chg_pct))
-
-    if new_chg_pct != chg_pct:
         publish_chg_pct(new_chg_pct)
+        return
+
+    # In the afternoon (after 15:00) 100%
+    # Get the battery as full as possible for after sunset
+    if now >= afternoon:
+        publish_chg_pct(100)
+        return
+
+    # if in doubt, no limit
+    publish_chg_pct(100)
 
 
 def on_message(mqttc, obj, msg):
@@ -96,6 +116,11 @@ def on_message(mqttc, obj, msg):
 
         logging.debug("got new auto_chg_pct: {}".format(auto_chg_pct))
 
+    if msg.topic == SOC_TOPIC:
+        global soc
+        soc = int(msg.payload)
+        logging.debug("got new soc: {}".format(soc))
+
 
 if __name__ == '__main__':
     logging.basicConfig(stream=sys.stdout,
@@ -113,6 +138,7 @@ if __name__ == '__main__':
     mqttc.subscribe(PV_P_TOPIC, 0)
     mqttc.subscribe(CHG_PCT_TOPIC, 0)
     mqttc.subscribe(AUTO_CHG_TOPIC, 0)
+    mqttc.subscribe(SOC_TOPIC, 0)
 
     mqttc.loop_start()
     while True:
