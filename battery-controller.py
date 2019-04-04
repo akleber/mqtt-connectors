@@ -52,15 +52,17 @@ def publish_chg_pct(pct):
 
 def update_chg_p():
 
-    # if soc < 30% set charging to 50%
-    # Keep some energy in battery to support peak demands
-    if soc < 30:
-        publish_chg_pct(50)
-        return
-
     now = datetime.datetime.now()
     afternoon = now.replace(hour=15, minute=0, second=0, microsecond=0)
     morning = now.replace(hour=9, minute=30, second=0, microsecond=0)
+
+    # if soc < 30% set charging to 100% to keep some energy in the battery
+    # to support peak demands
+    # In the afternoon (after 15:00) set charging to 100% to get the battery
+    # as full as possible for after sunset
+    if soc < 30 or now >= afternoon:
+        publish_chg_pct(100)
+        return
 
     # In the morning (before 9:30) no charging
     # Reserver space in battery for peak shaving
@@ -84,13 +86,7 @@ def update_chg_p():
         publish_chg_pct(new_chg_pct)
         return
 
-    # In the afternoon (after 15:00) 100%
-    # Get the battery as full as possible for after sunset
-    if now >= afternoon:
-        publish_chg_pct(100)
-        return
-
-    # if in doubt, no limit
+    # fail safe no limit
     publish_chg_pct(100)
 
 
