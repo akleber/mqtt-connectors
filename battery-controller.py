@@ -29,6 +29,8 @@ BROKER_PORT = 1883
 FREQUENCY = 600
 MAX_CHG_P = 2500
 MAX_AC_P = 3000
+PEAK_SHAVING_THRESHOLD = MAX_AC_P - (MAX_AC_P * 0.05)
+PEAK_EASING_RESERVE = 30
 PV_P_TOPIC = 'fronius/p_pv'
 SET_CHG_PCT_TOPIC = 'battery/set/chg_pct'
 CHG_PCT_TOPIC = 'battery/chg_pct'
@@ -53,27 +55,25 @@ def publish_chg_pct(pct):
 def update_chg_p():
 
     now = datetime.datetime.now()
-    afternoon = now.replace(hour=15, minute=0, second=0, microsecond=0)
-    morning = now.replace(hour=9, minute=30, second=0, microsecond=0)
+    noon = now.replace(hour=12, minute=00, second=0, microsecond=0)
 
     # if soc < 30% set charging to 100% to keep some energy in the battery
     # to support peak demands
-    # In the afternoon (after 15:00) set charging to 100% to get the battery
-    # as full as possible for after sunset
-    if soc < 30 or now >= afternoon:
+    if soc < PEAK_EASING_RESERVE:
         publish_chg_pct(100)
         return
 
-    # In the morning (before 9:30) no charging
-    # Reserver space in battery for peak shaving
-    if now < morning:
+    # If we have enough enegery for peak demand easing but are not
+    # yet (before noon) above the peak shaving threashold, do not charge
+    # anymore, to keep reserve for peak shaving
+    if soc >= PEAK_EASING_RESERVE and pv_p < PEAK_SHAVING_THRESHOLD and now < noon:
         publish_chg_pct(0)
         return
 
     # At noon adaptive charging (see below)
     # Prevent peak shaving as long as possible by not charging the battery
     # to quickly
-    if now >= morning and now < afternoon:
+    if pv_p >= PEAK_SHAVING_THRESHOLD:
         new_chg_p = pv_p - MAX_AC_P
         new_chg_pct = math.ceil((100 * new_chg_p) / MAX_CHG_P)
 
