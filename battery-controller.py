@@ -30,7 +30,8 @@ FREQUENCY = 600
 MAX_CHG_P = 2500
 MAX_AC_P = 3000
 PEAK_SHAVING_THRESHOLD = MAX_AC_P - (MAX_AC_P * 0.05)
-PEAK_EASING_RESERVE = 30
+PEAK_EASING_RESERVE = 25
+MIN_CHARGE_PCT = 5
 PV_P_TOPIC = 'fronius/p_pv'
 SET_CHG_PCT_TOPIC = 'battery/set/chg_pct'
 CHG_PCT_TOPIC = 'battery/chg_pct'
@@ -57,7 +58,7 @@ def update_chg_p():
     now = datetime.datetime.now()
     noon = now.replace(hour=12, minute=00, second=0, microsecond=0)
 
-    # if soc < 30% set charging to 100% to keep some energy in the battery
+    # if soc < PEAK_EASING_RESERVE set charging to 100% to keep some energy in the battery
     # to support peak demands
     if soc < PEAK_EASING_RESERVE:
         publish_chg_pct(100)
@@ -78,8 +79,8 @@ def update_chg_p():
         new_chg_pct = math.ceil((100 * new_chg_p) / MAX_CHG_P)
 
         # bring new_chg_pct between 10 and 100
-        if new_chg_pct < 10:
-            new_chg_pct = 10
+        if new_chg_pct < MIN_CHARGE_PCT:
+            new_chg_pct = MIN_CHARGE_PCT
         if new_chg_pct > 100:
             new_chg_pct = 100
 
