@@ -59,8 +59,8 @@ def update_chg_p():
     noon = now.replace(hour=12, minute=00, second=0, microsecond=0)
     afternoon = now.replace(hour=15, minute=30, second=0, microsecond=0)
 
-    # if soc < PEAK_EASING_RESERVE set charging to 100% to keep some energy in the battery
-    # to support peak demands
+    # if soc < PEAK_EASING_RESERVE set charging to 100% to keep some
+    # energy in the battery to support peak demands
     if soc < PEAK_EASING_RESERVE:
         publish_chg_pct(100)
         return
@@ -113,6 +113,7 @@ def on_message(mqttc, obj, msg):
         global auto_chg_pct
         if msg.payload == b'True':
             auto_chg_pct = True
+            update_chg_p()
         else:
             auto_chg_pct = False
             # reset chg_pct to 100% when auto mode is disabled
