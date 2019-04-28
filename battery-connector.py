@@ -55,6 +55,15 @@ def on_message(mqttc, obj, msg):
 
         logging.debug("Setting via modbus chg_pct: {}".format(newValue)) # noqa E501
 
+        update()
+
+
+def update():
+    values = battery_data()
+    for k, v in values.items():
+        (result, mid) = mqttc.publish("{}/{}".format(BATTERY_MQTT_PREFIX, k), str(v), 0, retain=True) # noqa E501
+        logging.info("Pubish Result: {} MID: {} for {}: {}".format(result, mid, k, v)) # noqa E501
+
 
 if __name__ == '__main__':
     logging.basicConfig(stream=sys.stdout,
@@ -77,11 +86,7 @@ if __name__ == '__main__':
     mqttc.loop_start()
     while True:
         try:
-            values = battery_data()
-            for k, v in values.items():
-                (result, mid) = mqttc.publish("{}/{}".format(BATTERY_MQTT_PREFIX, k), str(v), 0, retain=True) # noqa E501
-                logging.info("Pubish Result: {} MID: {} for {}: {}".format(result, mid, k, v)) # noqa E501
-
+            update()
             time.sleep(FREQUENCY)
         except KeyboardInterrupt:
             break
