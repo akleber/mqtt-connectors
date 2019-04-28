@@ -79,7 +79,7 @@ if __name__ == '__main__':
         try:
             values = battery_data()
             for k, v in values.items():
-                (result, mid) = mqttc.publish("{}/{}".format(BATTERY_MQTT_PREFIX, k), str(v), 0) # noqa E501
+                (result, mid) = mqttc.publish("{}/{}".format(BATTERY_MQTT_PREFIX, k), str(v), 0, retain=True) # noqa E501
                 logging.info("Pubish Result: {} MID: {} for {}: {}".format(result, mid, k, v)) # noqa E501
 
             time.sleep(FREQUENCY)
