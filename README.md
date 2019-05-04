@@ -45,5 +45,6 @@ The scripts will run in an infinite loop until an error happens or they are abor
 * add goecharger-controller to set charging power based on available pv energy.
 * allow charging if soc < 7%
 * Status for battery-controller
-* add Forecast for tomorrow 
+* add Forecast for tomorrow
+* connector for rpi temp sensor
 
