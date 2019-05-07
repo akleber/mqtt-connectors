@@ -4,11 +4,29 @@ import paho.mqtt.client as paho  # pip install paho-mqtt
 import time
 import logging
 import sys
+import secrets
 
 ZOE_MQTT_PREFIX = 'zoe'
 BROKER_HOST = 'rpi3.fritz.box'
 BROKER_PORT = 1883
 FREQUENCY = 600  # sec
+
+
+def login():
+    pass
+
+
+def refresh():
+    pass
+
+
+def getToken():
+    print(secrets.VIN)
+    # login or refresh
+
+
+def getSocRange():
+    pass
 
 
 def update():
