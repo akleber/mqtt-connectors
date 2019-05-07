@@ -67,9 +67,9 @@ def update():
 
 if __name__ == '__main__':
     logging.basicConfig(stream=sys.stdout,
-        format='%(asctime)s %(levelname)-8s %(message)s',
-        datefmt='%Y-%m-%d %H:%M:%S',
-        level=logging.INFO)
+                        format='%(asctime)s %(levelname)-8s %(message)s',
+                        datefmt='%Y-%m-%d %H:%M:%S',
+                        level=logging.INFO)
 
     mqttc = paho.Client('battery-connector', clean_session=True)
     # mqttc.enable_logger()
