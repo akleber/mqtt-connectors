@@ -4,6 +4,7 @@ import paho.mqtt.client as paho  # pip install paho-mqtt
 import time
 import logging
 import sys
+
 import secrets
 
 ZOE_MQTT_PREFIX = 'zoe'
