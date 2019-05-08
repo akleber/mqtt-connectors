@@ -100,3 +100,4 @@ ENV/
 # mypy
 .mypy_cache/
 *.sublime-workspace
+/credentials_token.json
