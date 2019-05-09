@@ -4,6 +4,7 @@ import paho.mqtt.client as paho  # pip install paho-mqtt
 import time
 import logging
 import sys
+import pathlib
 
 from zoe_api.python.shared.zeservices import ZEServices
 
@@ -44,6 +45,11 @@ if __name__ == '__main__':
                         datefmt='%Y-%m-%d %H:%M:%S',
                         level=logging.INFO)
 
+    token_file = pathlib.Path('credentials_token.json')
+    if token_file.is_file():
+        token_file.unlink()
+        logging.info("token file removed")
+    
     mqttc = paho.Client('zoe-connector', clean_session=True)
     # mqttc.enable_logger()
 
