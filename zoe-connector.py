@@ -33,10 +33,10 @@ def update():
     soc, remaining_range = getSocRange()
 
     (result, mid) = mqttc.publish("{}/{}".format(ZOE_MQTT_PREFIX, 'soc'), str(soc), 0, retain=True)
-    logging.info("Pubish Result: {} MID: {} for {}: {}".format(result, mid, 'soc', soc))
+    # logging.info("Pubish Result: {} MID: {} for {}: {}".format(result, mid, 'soc', soc))
 
     (result, mid) = mqttc.publish("{}/{}".format(ZOE_MQTT_PREFIX, 'range'), str(remaining_range), 0, retain=True)
-    logging.info("Pubish Result: {} MID: {} for {}: {}".format(result, mid, 'range', remaining_range))
+    # logging.info("Pubish Result: {} MID: {} for {}: {}".format(result, mid, 'range', remaining_range))
 
 
 if __name__ == '__main__':
@@ -49,7 +49,7 @@ if __name__ == '__main__':
     if token_file.is_file():
         token_file.unlink()
         logging.info("token file removed")
-    
+
     mqttc = paho.Client('zoe-connector', clean_session=True)
     # mqttc.enable_logger()
 
