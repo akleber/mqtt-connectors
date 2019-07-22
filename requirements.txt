@@ -8,3 +8,4 @@ requests==2.18.4
 six==1.11.0
 urllib3==1.22
 influxdb==5.2.1
+pyatmo==2.1.1
