@@ -8,23 +8,25 @@ from influxdb import InfluxDBClient
 BROKER_HOST = 'rpi3.fritz.box'
 BROKER_PORT = 1883
 
+
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code "+str(rc))
     client.subscribe("#")
 
+
 def on_message(client, userdata, msg):
     # print("Received a message on topic: " + msg.topic)
     # Use utc as timestamp
-    receiveTime=datetime.datetime.utcnow()
-    message=msg.payload.decode("utf-8")
-    isfloatValue=False
+    receiveTime = datetime.datetime.utcnow()
+    message = msg.payload.decode("utf-8")
+    isfloatValue = False
     try:
         # Convert the string to a float so that it is stored as a number and not a string in the database
         val = float(message)
-        isfloatValue=True
+        isfloatValue = True
     except:
-        #print("Could not convert " + message + " to a float value")
-        isfloatValue=False
+        # print("Could not convert " + message + " to a float value")
+        isfloatValue = False
 
     if isfloatValue:
         # print(str(receiveTime) + ": " + msg.topic + " " + str(val))
@@ -42,6 +44,7 @@ def on_message(client, userdata, msg):
         dbclient.write_points(json_body)
         # print("Finished writing to InfluxDB")
 
+
 print("start")
 
 # Set up a client for InfluxDB
@@ -52,8 +55,8 @@ print("dbclient created")
 client = mqtt.Client()
 client.on_connect = on_connect
 client.on_message = on_message
-connOK=False
-while(connOK == False):
+connOK = False
+while(connOK is False):
     try:
         client.connect(BROKER_HOST, BROKER_PORT, 60)
         connOK = True
