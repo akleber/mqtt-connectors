@@ -64,7 +64,7 @@ if __name__ == '__main__':
         try:
             values = get_values(authorization)
             for k, v in values.items():
-                (result, mid) = mqttc.publish("{}/{}".format(NETATMO_MQTT_PREFIX, k), str(v), 0)
+                (result, mid) = mqttc.publish("{}/{}".format(NETATMO_MQTT_PREFIX, k), str(v), 0, True)
                 logging.debug("Pubish Result: {} MID: {} for {}: {}".format(result, mid, k, v))  # noqa E501                
 
             time.sleep(FREQUENCY)
