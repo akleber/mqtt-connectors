@@ -6,15 +6,13 @@ import time
 import logging
 import sys
 
+import secrets
+
+
 NETATMO_MQTT_PREFIX = 'netatmo'
 BROKER_HOST = 'rpi3.fritz.box'
 BROKER_PORT = 1883
 FREQUENCY = 10 * 60  # in seconds
-
-CLIENT_ID = ''
-CLIENT_SECRET = ''
-USERNAME = ''
-PASSWORD = ''
 
 
 def get_values():
@@ -23,10 +21,10 @@ def get_values():
 
     try:
         authorization = pyatmo.ClientAuth(
-            clientId=CLIENT_ID,
-            clientSecret=CLIENT_SECRET,
-            username=USERNAME,
-            password=PASSWORD,
+            clientId=secrets.CLIENT_ID,
+            clientSecret=secrets.CLIENT_SECRET,
+            username=secrets.USERNAME,
+            password=secrets.PASSWORD,
         )
 
         weatherData = pyatmo.WeatherStationData(authorization)

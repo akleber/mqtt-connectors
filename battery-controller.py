@@ -87,7 +87,7 @@ def update_chg_p():
 
         publish_chg_pct(new_chg_pct)
         return
-    
+
     # before afternoon do not charge to fast
     if now < afternoon:
         publish_chg_pct(50)
