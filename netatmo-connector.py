@@ -14,23 +14,23 @@ BROKER_HOST = 'rpi3.fritz.box'
 BROKER_PORT = 1883
 FREQUENCY = 10 * 60  # in seconds
 
+sensors_to_use = ['Temperature', 'CO2', 'Humidity', 'Noise', 'Pressure',
+                  'AbsolutePressure', 'battery_percent',
+                  'Rain', 'sum_rain_24', 'sum_rain_1']
 
-def get_values():
+
+def get_values(authorization):
 
     values = {}
 
     try:
-        authorization = pyatmo.ClientAuth(
-            clientId=secrets.CLIENT_ID,
-            clientSecret=secrets.CLIENT_SECRET,
-            username=secrets.USERNAME,
-            password=secrets.PASSWORD,
-        )
-
         weatherData = pyatmo.WeatherStationData(authorization)
+        weatherDataMap = weatherData.lastData()
 
-        values['outdoor/temp'] = weatherData.lastData()["Outdoor"]["Temperature"]
-        values['indoor/temp'] = weatherData.lastData()["Wohnzimmer"]["Temperature"]
+        for station in weatherDataMap:
+            for sensor in weatherDataMap[station]:
+                if sensor in sensors_to_use:
+                    values["{}/{}".format(station, sensor)] = weatherDataMap[station][sensor]
 
     except Exception as e:
         print("exception {}".format(e))
@@ -52,9 +52,17 @@ if __name__ == '__main__':
     mqttc.publish("{}/connectorstatus".format(NETATMO_MQTT_PREFIX), "netatmo Connector: ON-LINE", retain=True)
 
     mqttc.loop_start()
+
+    authorization = pyatmo.ClientAuth(
+        clientId=secrets.CLIENT_ID,
+        clientSecret=secrets.CLIENT_SECRET,
+        username=secrets.USERNAME,
+        password=secrets.PASSWORD,
+    )
+
     while True:
         try:
-            values = get_values()
+            values = get_values(authorization)
             for k, v in values.items():
                 (result, mid) = mqttc.publish("{}/{}".format(NETATMO_MQTT_PREFIX, k), str(v), 0)
                 logging.debug("Pubish Result: {} MID: {} for {}: {}".format(result, mid, k, v))  # noqa E501                
