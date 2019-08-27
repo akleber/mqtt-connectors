@@ -10,7 +10,7 @@ BROKER_PORT = 1883
 
 
 def on_connect(client, userdata, flags, rc):
-    print("Connected with result code "+str(rc))
+    print("Connected with result code " + str(rc))
     client.subscribe("#")
 
 
@@ -24,7 +24,7 @@ def on_message(client, userdata, msg):
         # Convert the string to a float so that it is stored as a number and not a string in the database
         val = float(message)
         isfloatValue = True
-    except:
+    except Exception:
         # print("Could not convert " + message + " to a float value")
         isfloatValue = False
 
@@ -60,7 +60,7 @@ while(connOK is False):
     try:
         client.connect(BROKER_HOST, BROKER_PORT, 60)
         connOK = True
-    except:
+    except Exception:
         connOK = False
     time.sleep(2)
 

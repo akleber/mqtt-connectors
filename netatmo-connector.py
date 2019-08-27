@@ -44,7 +44,8 @@ if __name__ == '__main__':
 
     mqttc = paho.Client('netatmo-mqtt-connector', clean_session=True)
     # mqttc.enable_logger()
-    mqttc.will_set("{}/connectorstatus".format(NETATMO_MQTT_PREFIX), "netatmo Connector: LOST_CONNECTION", 0, retain=True)
+    mqttc.will_set("{}/connectorstatus".format(NETATMO_MQTT_PREFIX),
+                   "netatmo Connector: LOST_CONNECTION", 0, retain=True)
 
     mqttc.connect(BROKER_HOST, BROKER_PORT, 60)
     logging.info("Connected to {}:{}".format(BROKER_HOST, BROKER_PORT))
@@ -54,10 +55,10 @@ if __name__ == '__main__':
     mqttc.loop_start()
 
     authorization = pyatmo.ClientAuth(
-        clientId=secrets.CLIENT_ID,
-        clientSecret=secrets.CLIENT_SECRET,
-        username=secrets.USERNAME,
-        password=secrets.PASSWORD,
+        clientId=secrets.NETATMO_CLIENT_ID,
+        clientSecret=secrets.NETATMO_CLIENT_SECRET,
+        username=secrets.NETATMO_USERNAME,
+        password=secrets.NETATMO_PASSWORD,
     )
 
     while True:

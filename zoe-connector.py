@@ -17,10 +17,10 @@ FREQUENCY = 600  # sec
 
 
 def getSocRange():
-    zeServices = ZEServices(secrets.ZE_USERNAME, secrets.ZE_PASSWORD)
+    zeServices = ZEServices(secrets.ZOE_ZE_USERNAME, secrets.ZOE_ZE_PASSWORD)
 
     # ZE Services vehicle status.
-    zeServices_json = zeServices.apiCall('/api/vehicle/' + secrets.VIN + '/battery')
+    zeServices_json = zeServices.apiCall('/api/vehicle/' + secrets.ZOE_VIN + '/battery')
 
     soc = zeServices_json['charge_level']
     remaining_range = zeServices_json['remaining_range']
