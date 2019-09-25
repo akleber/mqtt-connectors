@@ -11,7 +11,7 @@ from zoe_api.python.shared.zeservices import ZEServices
 import secrets
 
 ZOE_MQTT_PREFIX = 'zoe'
-BROKER_HOST = 'rpi3.fritz.box'
+BROKER_HOST = 'rpi3.kleber'
 BROKER_PORT = 1883
 FREQUENCY = 600  # sec
 

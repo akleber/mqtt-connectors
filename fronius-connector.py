@@ -10,9 +10,9 @@ import time
 import logging
 import sys
 
-FRONIUS_HOST = 'fronius.fritz.box'
+FRONIUS_HOST = 'fronius.kleber'
 FRONIUS_MQTT_PREFIX = 'fronius'
-BROKER_HOST = 'rpi3.fritz.box'
+BROKER_HOST = 'rpi3.kleber'
 BROKER_PORT = 1883
 FREQUENCY = 3
 

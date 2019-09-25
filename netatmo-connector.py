@@ -10,7 +10,7 @@ import secrets
 
 
 NETATMO_MQTT_PREFIX = 'netatmo'
-BROKER_HOST = 'rpi3.fritz.box'
+BROKER_HOST = 'rpi3.kleber'
 BROKER_PORT = 1883
 FREQUENCY = 10 * 60  # in seconds
 

@@ -13,9 +13,9 @@ from pymodbus.constants import Endian
 from pymodbus.payload import BinaryPayloadDecoder
 from pymodbus.client.sync import ModbusTcpClient as ModbusClient
 
-MODBUS_HOST = 'fronius.fritz.box'
+MODBUS_HOST = 'fronius.kleber'
 BATTERY_MQTT_PREFIX = 'battery'
-BROKER_HOST = 'rpi3.fritz.box'
+BROKER_HOST = 'rpi3.kleber'
 BROKER_PORT = 1883
 FREQUENCY = 10
 

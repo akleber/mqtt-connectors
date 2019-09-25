@@ -8,7 +8,7 @@ import time
 FORECAST_API_DAY = 'https://api.forecast.solar/estimate/watthours/day/49.9/8.5/35/0/4.06'
 FORECAST_MQTT_PREFIX = 'forecast'
 
-BROKER_HOST = 'rpi3.fritz.box'
+BROKER_HOST = 'rpi3.kleber'
 BROKER_PORT = 1883
 
 if __name__ == '__main__':
