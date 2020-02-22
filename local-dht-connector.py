@@ -17,7 +17,7 @@ BROKER_PORT = 1883
 FREQUENCY_S = 300
 
 
-def data():
+def data(retry=True):
 
     values = {}
 
@@ -34,7 +34,13 @@ def data():
 
     except RuntimeError as error:
         # Errors happen fairly often, DHT's are hard to read, just keep going
-        logging.info("DHT error: ".format(error.args))
+        logging.info("DHT error: ".format(str(error)))
+        if retry:
+            logging.info("Retrying in 3 sec...")
+            time.sleep(3)
+            values = data(False)
+        else:
+            logging.info("Not retrying again")
 
     return values
 
