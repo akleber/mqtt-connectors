@@ -32,7 +32,7 @@ def data():
 
     except RuntimeError as error:
         # Errors happen fairly often, DHT's are hard to read, just keep going
-        logging.info("DHT error: ".format(error.message))
+        logging.info("DHT error: ".format(error.args))
 
     return values
 
