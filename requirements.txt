@@ -9,3 +9,4 @@ six==1.11.0
 urllib3==1.22
 influxdb==5.2.1
 pyatmo==2.1.1
+adafruit-circuitpython-dht==3.2.6
