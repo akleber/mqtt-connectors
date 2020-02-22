@@ -20,6 +20,7 @@ FREQUENCY_S = 300
 def data(retry=True):
 
     values = {}
+    dhtDevice = None
 
     try:
         dhtDevice = adafruit_dht.DHT22(board.D4)
@@ -27,14 +28,18 @@ def data(retry=True):
         temperature_c = dhtDevice.temperature
         humidity = dhtDevice.humidity
 
+        dhtDevice = None
+
         values['waschkueche/temp'] = temperature_c
         values['waschkueche/humidity'] = humidity
 
         logging.info("{:.1f} C, {}% ".format(temperature_c, humidity))
 
     except RuntimeError as error:
-        # Errors happen fairly often, DHT's are hard to read, just keep going
+        # Errors happen fairly often, DHT's are hard to read
         logging.info("DHT error: ".format(str(error)))
+        dhtDevice = None
+
         if retry:
             logging.info("Retrying in 3 sec...")
             time.sleep(3)
