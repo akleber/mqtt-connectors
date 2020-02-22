@@ -30,6 +30,8 @@ def data():
         values['waschkueche/temp'] = temperature_c
         values['waschkueche/humidity'] = humidity
 
+        logging.info("{:.1f} C, {}% ".format(temperature_c, humidity))
+
     except RuntimeError as error:
         # Errors happen fairly often, DHT's are hard to read, just keep going
         logging.info("DHT error: ".format(error.args))
