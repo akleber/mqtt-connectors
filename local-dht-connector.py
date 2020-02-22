@@ -5,8 +5,7 @@ import time
 import logging
 import sys
 
-import board
-import adafruit_dht
+from pigpio-dit import DHT22
 
 # install libgpiod2:
 # sudo apt-get install libgpiod2
@@ -16,7 +15,7 @@ BROKER_HOST = 'rpi3.kleber'
 BROKER_PORT = 1883
 FREQUENCY_S = 300
 
-dhtDevice = adafruit_dht.DHT22(board.D4)
+dhtDevice = DHT22(4)
 
 
 def data(retry=True):
@@ -24,16 +23,16 @@ def data(retry=True):
     values = {}
 
     try:
-        temperature_c = dhtDevice.temperature
-        humidity = dhtDevice.humidity
+        result = sensor.read()
 
-        values['waschkueche/temp'] = temperature_c
-        values['waschkueche/humidity'] = humidity
+        if result['valid']:
+            values['waschkueche/temp'] = result['temp_c']
+            values['waschkueche/humidity'] = result['humidity']
+            logging.info("{:.1f} C, {}% ".format(values['waschkueche/temp'], values['waschkueche/humidity']))
+        else:
+            logging.info("data not valid")
 
-        logging.info("{:.1f} C, {}% ".format(temperature_c, humidity))
-
-    except RuntimeError as error:
-        # Errors happen fairly often, DHT's are hard to read
+    except TimeoutError as error:
         logging.info("DHT error: ".format(str(error)))
 
         if retry:
