@@ -7,8 +7,6 @@ import sys
 
 from pigpio_dht import DHT22
 
-# install libgpiod2:
-# sudo apt-get install libgpiod2
 
 MQTT_PREFIX = 'rpi'
 BROKER_HOST = 'rpi3.kleber'
@@ -23,7 +21,7 @@ def data(retry=True):
     values = {}
 
     try:
-        result = sensor.read()
+        result = dhtDevice.read()
 
         if result['valid']:
             values['waschkueche/temp'] = result['temp_c']
