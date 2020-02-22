@@ -16,18 +16,14 @@ BROKER_HOST = 'rpi3.kleber'
 BROKER_PORT = 1883
 FREQUENCY_S = 300
 
+dhtDevice = adafruit_dht.DHT22(board.D4)
 
-def data(device=None):
+
+def data(retry=True):
 
     values = {}
-    dhtDevice = None
 
     try:
-        if device:
-            dhtDevice = device
-        else:
-            dhtDevice = adafruit_dht.DHT22(board.D4)
-
         temperature_c = dhtDevice.temperature
         humidity = dhtDevice.humidity
 
@@ -40,10 +36,10 @@ def data(device=None):
         # Errors happen fairly often, DHT's are hard to read
         logging.info("DHT error: ".format(str(error)))
 
-        if not device:
+        if retry:
             logging.info("Retrying in 3 sec...")
             time.sleep(3)
-            values = data(dhtDevice)
+            values = data(False)
         else:
             logging.info("Not retrying again")
 
