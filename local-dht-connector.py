@@ -17,18 +17,19 @@ BROKER_PORT = 1883
 FREQUENCY_S = 300
 
 
-def data(retry=True):
+def data(device=None):
 
     values = {}
     dhtDevice = None
 
     try:
-        dhtDevice = adafruit_dht.DHT22(board.D4)
+        if device:
+            dhtDevice = device
+        else:
+            dhtDevice = adafruit_dht.DHT22(board.D4)
 
         temperature_c = dhtDevice.temperature
         humidity = dhtDevice.humidity
-
-        dhtDevice = None
 
         values['waschkueche/temp'] = temperature_c
         values['waschkueche/humidity'] = humidity
@@ -38,12 +39,11 @@ def data(retry=True):
     except RuntimeError as error:
         # Errors happen fairly often, DHT's are hard to read
         logging.info("DHT error: ".format(str(error)))
-        dhtDevice = None
 
-        if retry:
+        if not device:
             logging.info("Retrying in 3 sec...")
             time.sleep(3)
-            values = data(False)
+            values = data(dhtDevice)
         else:
             logging.info("Not retrying again")
 
