@@ -16,14 +16,14 @@ BROKER_HOST = 'rpi3.kleber'
 BROKER_PORT = 1883
 FREQUENCY_S = 300
 
-dhtDevice = adafruit_dht.DHT22(board.D4)
-
 
 def data():
 
     values = {}
 
     try:
+        dhtDevice = adafruit_dht.DHT22(board.D4)
+
         temperature_c = dhtDevice.temperature
         humidity = dhtDevice.humidity
 
@@ -32,7 +32,7 @@ def data():
 
     except RuntimeError as error:
         # Errors happen fairly often, DHT's are hard to read, just keep going
-        logging.info("DHT error: ".format(error.args[0]))
+        logging.info("DHT error: ".format(error.message))
 
     return values
 
