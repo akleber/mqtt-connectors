@@ -5,7 +5,7 @@ import time
 import logging
 import sys
 
-from pigpio_dit import DHT22
+from pigpio_dht import DHT22
 
 # install libgpiod2:
 # sudo apt-get install libgpiod2
