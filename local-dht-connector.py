@@ -28,7 +28,7 @@ def data(retry=True):
             values['waschkueche/temp'] = result['temp_c']
             values['waschkueche/humidity'] = result['humidity']
             values['waschkueche/humidity_abs'] = weathermath.AF(result['humidity'], result['temp_c'])
-            logging.info("{:.1f} C, {} %, {} g/m3 ".format(values['waschkueche/temp'],
+            logging.info("{:.1f} C, {} %, {:.2f} g/m3 ".format(values['waschkueche/temp'],
                                                            values['waschkueche/humidity'],
                                                            values['waschkueche/humidity_abs']))
         else:
