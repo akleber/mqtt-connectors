@@ -4,6 +4,7 @@ import paho.mqtt.client as paho  # pip install paho-mqtt
 import time
 import logging
 import sys
+import weathermath
 
 from pigpio_dht import DHT22
 
@@ -26,7 +27,10 @@ def data(retry=True):
         if result['valid']:
             values['waschkueche/temp'] = result['temp_c']
             values['waschkueche/humidity'] = result['humidity']
-            logging.info("{:.1f} C, {}% ".format(values['waschkueche/temp'], values['waschkueche/humidity']))
+            values['waschkueche/humidity_abs'] = weathermath.AF(result['humidity'], result['temp_c'])
+            logging.info("{:.1f} C, {} %, {} g/m3 ".format(values['waschkueche/temp'],
+                                                           values['waschkueche/humidity'],
+                                                           values['waschkueche/humidity_abs']))
         else:
             logging.info("data not valid")
 
