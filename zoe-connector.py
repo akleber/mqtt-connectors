@@ -20,8 +20,9 @@ def getSocRange(gigya):
     k = Kamereon(api_key=secrets.KAMEREON_API_KEY, gigya=gigya, country='DE')
     v = Vehicle(secrets.ZOE_VIN, k)
 
-    soc = v.battery_status()
-    remaining_range = v.mileage()
+    b = v.battery_status()
+    soc = b['batteryLevel']
+    remaining_range = b['batteryAutonomy']
 
     logging.info("Zoe API: soc: {}%, range: {}km".format(soc, remaining_range))
 
