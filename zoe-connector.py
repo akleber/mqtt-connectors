@@ -4,33 +4,32 @@ import paho.mqtt.client as paho  # pip install paho-mqtt
 import time
 import logging
 import sys
-import pathlib
-
-from zoe_api.python.shared.zeservices import ZEServices
+from pyze.api import Gigya, Kamereon, Vehicle
 
 import secrets
+
 
 ZOE_MQTT_PREFIX = 'zoe'
 BROKER_HOST = 'rpi3.kleber'
 BROKER_PORT = 1883
-FREQUENCY = 600  # sec
+FREQUENCY = 1200  # sec
 
 
-def getSocRange():
-    zeServices = ZEServices(secrets.ZOE_ZE_USERNAME, secrets.ZOE_ZE_PASSWORD)
+def getSocRange(gigya):
 
-    # ZE Services vehicle status.
-    zeServices_json = zeServices.apiCall('/api/vehicle/' + secrets.ZOE_VIN + '/battery')
+    k = Kamereon(api_key=secrets.KAMEREON_API_KEY, gigya=gigya, country='DE')
+    v = Vehicle(secrets.ZOE_VIN, k)
 
-    soc = zeServices_json['charge_level']
-    remaining_range = zeServices_json['remaining_range']
+    soc = v.battery_status()
+    remaining_range = v.mileage()
+
     logging.info("Zoe API: soc: {}%, range: {}km".format(soc, remaining_range))
 
     return soc, remaining_range
 
 
-def update():
-    soc, remaining_range = getSocRange()
+def update(gigya):
+    soc, remaining_range = getSocRange(gigya)
 
     (result, mid) = mqttc.publish("{}/{}".format(ZOE_MQTT_PREFIX, 'soc'), str(soc), 0, retain=True)
     # logging.info("Pubish Result: {} MID: {} for {}: {}".format(result, mid, 'soc', soc))
@@ -45,13 +44,12 @@ if __name__ == '__main__':
                         datefmt='%Y-%m-%d %H:%M:%S',
                         level=logging.INFO)
 
-    token_file = pathlib.Path('credentials_token.json')
-    if token_file.is_file():
-        token_file.unlink()
-        logging.info("token file removed")
-
     mqttc = paho.Client('zoe-connector', clean_session=True)
     # mqttc.enable_logger()
+
+    g = Gigya(api_key=secrets.GIGYA_API_KEY)
+    g.login(secrets.ZOE_ZE_USERNAME, secrets.ZOE_ZE_PASSWORD)  # You should only need to do this once
+    g.account_info()  # Retrieves and caches person ID
 
     mqttc.connect(BROKER_HOST, BROKER_PORT, 60)
     logging.info("Connected to {}:{}".format(BROKER_HOST, BROKER_PORT))
@@ -59,7 +57,7 @@ if __name__ == '__main__':
     mqttc.loop_start()
     while True:
         try:
-            update()
+            update(g)
             time.sleep(FREQUENCY)
         except KeyboardInterrupt:
             break

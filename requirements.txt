@@ -10,3 +10,4 @@ urllib3==1.22
 influxdb==5.2.1
 pyatmo==2.1.1
 pigpio-dht==0.3.2
+PyZE==0.4.0
