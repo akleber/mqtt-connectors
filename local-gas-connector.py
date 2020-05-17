@@ -9,7 +9,7 @@ import pigpio
 MQTT_PREFIX = 'gas'
 BROKER_HOST = 'rpi3.kleber'
 BROKER_PORT = 1883
-FREQUENCY_S = 2
+FREQUENCY_S = 1
 GAS_GPIO = 27
 
 m3abs = 0.0
@@ -23,7 +23,7 @@ def read_state():
     with open('local-gas-connector.state') as f:
         m3abs = float(f.readline().strip())
 
-    logging.info("Read initial value: {.3}".format(m3abs))
+    logging.info("Read initial value: {:.2f}".format(m3abs))
 
 
 def init_gpio():
@@ -43,17 +43,19 @@ def data():
     reed_state = gpio.read(GAS_GPIO)
 
     if reed_state == 1:
-        logging.info("Reed state open")
+        logging.debug("Reed state open")
         reed_state_old = reed_state
     else:
-        logging.info("Reed state closed")
+        logging.debug("Reed state closed")
 
         if reed_state_old != reed_state:
             reed_state_old = reed_state
 
-            m3abs += 0.001
-            values['gas/volume'] = str(m3abs)
-            values['gas/tick'] = '1'
+            m3abs += 0.01
+            values['volume'] = "{:.2f}".format(m3abs)
+            values['tick'] = '1'
+
+            logging.debug("m3abs: {:.2f}".format(m3abs))
 
     return values
 
@@ -78,7 +80,7 @@ if __name__ == '__main__':
         try:
             values = data()
             for k, v in values.items():
-                (result, mid) = mqttc.publish("{}/{}".format(MQTT_PREFIX, k), str(v), 0)
+                (result, mid) = mqttc.publish("{}/{}".format(MQTT_PREFIX, k), str(v), 0, retain=True)
                 logging.debug("Pubish Result: {} MID: {} for {}: {}".format(result, mid, k, v))  # noqa E501                
 
             time.sleep(FREQUENCY_S)
