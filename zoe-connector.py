@@ -48,9 +48,14 @@ if __name__ == '__main__':
     mqttc = paho.Client('zoe-connector', clean_session=True)
     # mqttc.enable_logger()
 
-    g = Gigya(api_key=secrets.GIGYA_API_KEY)
-    g.login(secrets.ZOE_ZE_USERNAME, secrets.ZOE_ZE_PASSWORD)  # You should only need to do this once
-    g.account_info()  # Retrieves and caches person ID
+    try:
+        g = Gigya(api_key=secrets.GIGYA_API_KEY)
+        g.login(secrets.ZOE_ZE_USERNAME, secrets.ZOE_ZE_PASSWORD)  # You should only need to do this once
+        g.account_info()  # Retrieves and caches person ID
+    except Exception:
+        logging.exception("Exception during Gigya login, sleeping 30s")
+        time.sleep(30)
+        raise
 
     mqttc.connect(BROKER_HOST, BROKER_PORT, 60)
     logging.info("Connected to {}:{}".format(BROKER_HOST, BROKER_PORT))
@@ -61,8 +66,10 @@ if __name__ == '__main__':
             update(g)
             time.sleep(FREQUENCY)
         except KeyboardInterrupt:
+            logging.warning("Keyboard interruption")
             break
         except Exception:
+            logging.exception("Exception occured in loop")
             raise
 
     mqttc.disconnect()
