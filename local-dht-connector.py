@@ -64,7 +64,7 @@ if __name__ == '__main__':
         try:
             values = data()
             for k, v in values.items():
-                (result, mid) = mqttc.publish("{}/{}".format(MQTT_PREFIX, k), str(v), 0)
+                (result, mid) = mqttc.publish("{}/{}".format(MQTT_PREFIX, k), str(v), qos=0, retain=True)
                 logging.debug("Pubish Result: {} MID: {} for {}: {}".format(result, mid, k, v))  # noqa E501                
 
             time.sleep(FREQUENCY_S)
