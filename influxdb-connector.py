@@ -7,6 +7,7 @@ from influxdb import InfluxDBClient
 
 BROKER_HOST = 'rpi3.kleber'
 BROKER_PORT = 1883
+INFLUXDB_HOST = 'albus.kleber'
 
 
 def on_connect(client, userdata, flags, rc):
@@ -48,7 +49,7 @@ def on_message(client, userdata, msg):
 print("start")
 
 # Set up a client for InfluxDB
-dbclient = InfluxDBClient('localhost', 8086, 'root', 'root', 'mqtt')
+dbclient = InfluxDBClient(INFLUXDB_HOST, 8086, 'mqtt', 'mqtt', 'mqtt')
 print("dbclient created")
 
 # Initialize the MQTT client that should connect to the Mosquitto broker
