@@ -13,7 +13,7 @@ import sys
 
 GOECHARGER_HOST = 'go-echarger.kleber'
 GOECHARGER_MQTT_PREFIX = 'goe'
-BROKER_HOST = 'rpi3.kleber'
+BROKER_HOST = 'localhost'
 BROKER_PORT = 1883
 FREQUENCY = 5
 

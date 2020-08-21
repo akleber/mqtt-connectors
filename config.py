@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-BROKER_HOST = 'rpi3.kleber'
+BROKER_HOST = 'localhost'
 BROKER_PORT = 1883
 
 FRONIUS_HOST = 'fronius.kleber'

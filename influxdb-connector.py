@@ -5,7 +5,7 @@ import datetime
 import time
 from influxdb import InfluxDBClient
 
-BROKER_HOST = 'rpi3.kleber'
+BROKER_HOST = 'localhost'
 BROKER_PORT = 1883
 INFLUXDB_HOST = 'albus.kleber'
 

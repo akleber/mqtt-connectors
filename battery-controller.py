@@ -24,7 +24,7 @@ import sys
 import datetime
 import math
 
-BROKER_HOST = 'rpi3.kleber'
+BROKER_HOST = 'localhost'
 BROKER_PORT = 1883
 FREQUENCY = 300
 MAX_CHG_P = 2500

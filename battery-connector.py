@@ -15,7 +15,7 @@ from pymodbus.client.sync import ModbusTcpClient as ModbusClient
 
 MODBUS_HOST = 'fronius.kleber'
 BATTERY_MQTT_PREFIX = 'battery'
-BROKER_HOST = 'rpi3.kleber'
+BROKER_HOST = 'localhost'
 BROKER_PORT = 1883
 FREQUENCY = 10
 

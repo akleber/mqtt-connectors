@@ -10,7 +10,7 @@ from pigpio_dht import DHT22
 
 
 MQTT_PREFIX = 'rpi'
-BROKER_HOST = 'rpi3.kleber'
+BROKER_HOST = 'localhost'
 BROKER_PORT = 1883
 FREQUENCY_S = 300
 

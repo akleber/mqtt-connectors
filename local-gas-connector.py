@@ -7,7 +7,7 @@ import sys
 import pigpio
 
 MQTT_PREFIX = 'gas'
-BROKER_HOST = 'rpi3.kleber'
+BROKER_HOST = 'localhost'
 BROKER_PORT = 1883
 FREQUENCY_S = 1
 GAS_GPIO = 27
