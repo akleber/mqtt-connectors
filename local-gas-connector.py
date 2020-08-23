@@ -77,7 +77,7 @@ if __name__ == '__main__':
 
     # initial value
     (result, mid) = mqttc.publish("{}/{}".format(MQTT_PREFIX, 'volume'), str("{:.2f}".format(m3abs)), 0, retain=True)
-    logging.debug("Pubish Result: {} MID: {} for {}: {}".format(result, mid, k, v))  # noqa E501
+    logging.debug("Pubish Result: {} MID: {} for {}: {}".format(result, mid, 'volume', "{:.2f}".format(m3abs)))  # noqa E501
 
     mqttc.loop_start()
     while True:
