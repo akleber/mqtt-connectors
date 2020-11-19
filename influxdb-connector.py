@@ -4,10 +4,7 @@ import paho.mqtt.client as mqtt
 import datetime
 import time
 from influxdb import InfluxDBClient
-
-BROKER_HOST = 'localhost'
-BROKER_PORT = 1883
-INFLUXDB_HOST = 'albus.kleber'
+from config import *
 
 
 def on_connect(client, userdata, flags, rc):
