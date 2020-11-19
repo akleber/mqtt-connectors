@@ -5,10 +5,9 @@ import time
 import logging
 import sys
 import pigpio
+from config import *
 
 MQTT_PREFIX = 'gas'
-BROKER_HOST = 'localhost'
-BROKER_PORT = 1883
 FREQUENCY_S = 1
 GAS_GPIO = 27
 
