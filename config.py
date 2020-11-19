@@ -15,6 +15,11 @@ PV_P_TOPIC = 'fronius/p_pv'
 SET_CHG_PCT_TOPIC = 'battery/set/chg_pct'
 CHG_PCT_TOPIC = 'battery/chg_pct'
 AUTO_CHG_TOPIC = 'battery/auto_chg_pct'
+SOC_TOPIC = 'fronius/soc'
 
 GOECHARGER_HOST = 'go-echarger.kleber'
 GOECHARGER_MQTT_PREFIX = 'goe'
+
+NETATMO_MQTT_PREFIX = 'netatmo'
+
+ZOE_MQTT_PREFIX = 'zoe'

@@ -8,15 +8,13 @@ import paho.mqtt.client as paho  # pip install paho-mqtt
 import time
 import logging
 import sys
+from config import *
 
 from pymodbus.constants import Endian
 from pymodbus.payload import BinaryPayloadDecoder
 from pymodbus.client.sync import ModbusTcpClient as ModbusClient
 
-MODBUS_HOST = 'fronius.kleber'
-BATTERY_MQTT_PREFIX = 'battery'
-BROKER_HOST = 'localhost'
-BROKER_PORT = 1883
+
 FREQUENCY = 10
 
 

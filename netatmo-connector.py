@@ -6,12 +6,10 @@ import time
 import logging
 import sys
 
+from config import *
 import secrets
 
 
-NETATMO_MQTT_PREFIX = 'netatmo'
-BROKER_HOST = 'localhost'
-BROKER_PORT = 1883
 FREQUENCY = 10 * 60  # in seconds
 
 sensors_to_use = ['Temperature', 'CO2', 'Humidity', 'Noise', 'Pressure',

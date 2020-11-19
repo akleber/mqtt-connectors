@@ -6,12 +6,10 @@ import logging
 import sys
 from pyze.api import Gigya, Kamereon, Vehicle
 
+from config import *
 import secrets
 
 
-ZOE_MQTT_PREFIX = 'zoe'
-BROKER_HOST = 'localhost'
-BROKER_PORT = 1883
 FREQUENCY = 1200  # sec
 
 

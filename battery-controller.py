@@ -23,9 +23,9 @@ import logging
 import sys
 import datetime
 import math
+from config import *
 
-BROKER_HOST = 'localhost'
-BROKER_PORT = 1883
+
 FREQUENCY = 300
 MAX_CHG_P = 2500
 MAX_AC_P = 3000

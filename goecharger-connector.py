@@ -10,11 +10,9 @@ import requests
 import time
 import logging
 import sys
+from config import *
 
-GOECHARGER_HOST = 'go-echarger.kleber'
-GOECHARGER_MQTT_PREFIX = 'goe'
-BROKER_HOST = 'localhost'
-BROKER_PORT = 1883
+
 FREQUENCY = 5
 
 
