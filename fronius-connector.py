@@ -9,11 +9,9 @@ import requests
 import time
 import logging
 import sys
+from config import *
 
-FRONIUS_HOST = 'fronius.kleber'
-FRONIUS_MQTT_PREFIX = 'fronius'
-BROKER_HOST = 'localhost'
-BROKER_PORT = 1883
+
 FREQUENCY = 3
 
 
