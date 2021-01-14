@@ -27,8 +27,8 @@ def sensor_data():
 
         device_temperature_file = devices_path / device / 'temperature'
 
-        temparture_string = device_temperature_file.read_text()
-        temperature = float(temparture_string) / 1000
+        temperture_string = device_temperature_file.read_text()
+        temperature = float(temperture_string) / 1000
 
         values[device.name] = temperature
 
@@ -47,12 +47,12 @@ if __name__ == '__main__':
 
     mqttc = paho.Client('heater-connector', clean_session=True)
     # mqttc.enable_logger()
-    mqttc.will_set("{}/connectorstatus".format(FRONIUS_MQTT_PREFIX), "Heater Connector: LOST_CONNECTION", 0, retain=True)
+    mqttc.will_set("{}/connectorstatus".format(HEATER_MQTT_PREFIX), "Heater Connector: LOST_CONNECTION", 0, retain=True)
 
     mqttc.connect(BROKER_HOST, BROKER_PORT, 60)
     logging.info("Connected to {}:{}".format(BROKER_HOST, BROKER_PORT))
 
-    mqttc.publish("{}/connectorstatus".format(FRONIUS_MQTT_PREFIX), "Heater Connector: ON-LINE", retain=True)
+    mqttc.publish("{}/connectorstatus".format(HEATER_MQTT_PREFIX), "Heater Connector: ON-LINE", retain=True)
 
     mqttc.loop_start()
     while True:
@@ -68,7 +68,7 @@ if __name__ == '__main__':
         except Exception:
             raise
 
-    mqttc.publish("{}/connectorstatus".format(FRONIUS_MQTT_PREFIX), "Heater Connector: OFF-LINE", retain=True)
+    mqttc.publish("{}/connectorstatus".format(HEATER_MQTT_PREFIX), "Heater Connector: OFF-LINE", retain=True)
 
     mqttc.disconnect()
     mqttc.loop_stop()  # waits, until DISCONNECT message is sent out
