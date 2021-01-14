@@ -37,7 +37,7 @@ def sensor_data():
 
 def heater_data():
     values = sensor_data()
-    values.update(viessman_data())
+    values.update(viessmann_data())
 
     return values
 
