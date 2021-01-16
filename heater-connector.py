@@ -8,7 +8,7 @@ from pathlib import Path
 from config import *
 
 
-FREQUENCY = 10 # query ever x sec
+FREQUENCY = 5 # query ever x sec
 
 
 def viessmann_data():
