@@ -4,16 +4,12 @@ import paho.mqtt.client as paho  # pip install paho-mqtt
 import time
 import logging
 import sys
+import subprocess
 from pathlib import Path
 from config import *
 
 
 FREQUENCY = 5 # query ever x sec
-
-
-def viessmann_data():
-    values = {}
-    return values
 
 
 def sensor_data():
@@ -35,13 +31,6 @@ def sensor_data():
     return values
 
 
-def heater_data():
-    values = sensor_data()
-    values.update(viessmann_data())
-
-    return values
-
-
 if __name__ == '__main__':
     logging.basicConfig(stream=sys.stderr, level=logging.INFO)
 
@@ -57,10 +46,10 @@ if __name__ == '__main__':
     mqttc.loop_start()
     while True:
         try:
-            values = heater_data()
+            values = sensor_data()
             for k, v in values.items():
                 (result, mid) = mqttc.publish("{}/{}".format(HEATER_MQTT_PREFIX, k), str(v), 0)
-                logging.debug("Pubish Result: {} MID: {} for {}: {}".format(result, mid, k, v))  # noqa E501                
+                logging.debug("Pubish Result: {} MID: {} for {}: {}".format(result, mid, k, v))  # noqa E501
 
             time.sleep(FREQUENCY)
         except KeyboardInterrupt:

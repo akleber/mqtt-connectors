@@ -25,3 +25,5 @@ NETATMO_MQTT_PREFIX = 'netatmo'
 ZOE_MQTT_PREFIX = 'zoe'
 
 HEATER_MQTT_PREFIX = 'heater'
+
+VCONTROLD_MQTT_PREFIX = 'vcontrold'
