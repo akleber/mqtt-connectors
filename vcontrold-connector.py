@@ -15,18 +15,14 @@ FREQUENCY = 5 # query ever x sec
 def viessmann_data():
     values = {}
 
-    commands = "getTempVListM1,getTempRL17A,getTempWWist,getPumpeStatusM1"
+    commands = "getTempVListM1,getTempRL17A,getTempWWist,getPumpeStatusM1,getBrennerStatus,getBrennerStarts,getBrennerStunden1"
 
     # vclient -h localhost:3002 -c getPumpeStatusM1,getTempWWist -t vcontrold-connector.tmpl
     p = subprocess.run(["/usr/local/bin/vclient", "-h", "localhost:3002", "-c", commands, "-t", "/root/mqtt-connectors/vcontrold-connector.tmpl"], capture_output=True, text=True)
 
     for line in p.stdout.splitlines():
         key, value = line.split(":")
-        if isinstance(value, float):
-            if float(value) > 2.0:
-                values[key] = value
-        else:
-            values[key] = value
+        values[key] = value
 
     return values
 
