@@ -70,10 +70,13 @@ if __name__ == '__main__':
             logging.warning("Keyboard interruption")
             break
         except Exception:
-            logging.exception("Exception occured in loop")
             exception_counter = exception_counter + 1
             if exception_counter > 24:
+                logging.exception("Exception occured in main loop too many times ({exception_counter}), giving up....")
                 raise
+            else:
+                logging.exception(f"Exception occured in main loop, retrying after {EXCEPTION_DELAY} sec")
+
             time.sleep(EXCEPTION_DELAY)
 
     mqttc.disconnect()
