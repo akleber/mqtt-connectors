@@ -13,7 +13,8 @@ import sys
 from config import *
 
 
-FREQUENCY = 5
+FREQUENCY = 5  # sleep in sec
+EXCEPTION_DELAY = 120  # sleep in sec
 
 
 def goecharger_data():
@@ -29,16 +30,22 @@ def goecharger_data():
         values['power_sum'] = (j['nrg'][7] + j['nrg'][8] + j['nrg'][9]) / 10
         values['cur_chg_e'] = int(j['dws']) / 360000  # Deka-Watt-Sec to kWh
 
-    except requests.exceptions.Timeout:
-        print("Timeout requesting {}".format(url))
-    except requests.exceptions.RequestException as e:
-        print("requests exception {}".format(e))
+    except requests.Timeout:
+        logging.error(f"Requests: Timeout: {url}")
+        time.sleep(EXCEPTION_DELAY)
+    except requests.RequestException as e:
+        logging.error(f"Requests: Exception: {e}")
+        time.sleep(EXCEPTION_DELAY)
 
     return values
 
 
 if __name__ == '__main__':
-    logging.basicConfig(stream=sys.stderr, level=logging.INFO)
+    logging.basicConfig(
+        format='%(asctime)s %(levelname)-8s %(message)s',
+        level=logging.INFO,
+        datefmt='%Y-%m-%d %H:%M:%S')
+
     logging.getLogger("urllib3").setLevel(logging.INFO)
 
     mqttc = paho.Client('goecharger-mqtt-connector', clean_session=True)
