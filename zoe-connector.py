@@ -11,6 +11,7 @@ import secrets
 
 
 FREQUENCY = 1200  # sec
+EXCEPTION_DELAY = 300
 
 
 def getSocRange(gigya):
@@ -58,6 +59,8 @@ if __name__ == '__main__':
     mqttc.connect(BROKER_HOST, BROKER_PORT, 60)
     logging.info("Connected to {}:{}".format(BROKER_HOST, BROKER_PORT))
 
+    exception_counter = 0
+
     mqttc.loop_start()
     while True:
         try:
@@ -68,8 +71,12 @@ if __name__ == '__main__':
             break
         except Exception:
             logging.exception("Exception occured in loop")
-            raise
+            exception_counter = exception_counter + 1
+            if exception_counter > 24:
+                raise
+            time.sleep(EXCEPTION_DELAY)
 
     mqttc.disconnect()
     mqttc.loop_stop()  # waits, until DISCONNECT message is sent out
     logging.info("Disconnected from to {}:{}".format(BROKER_HOST, BROKER_PORT))
+
