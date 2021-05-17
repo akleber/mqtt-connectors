@@ -33,6 +33,14 @@ def fronius_data():
         values['battery_mode'] = powerflow_data['Body']['Data']['Inverters']['1'].get('Battery_Mode')
         values['e_day'] = powerflow_data['Body']['Data']['Inverters']['1']['E_Day'] / 1000
 
+
+        url = "http://{}/solar_api/v1/GetMeterRealtimeData.cgi?Scope=System".format(FRONIUS_HOST)  # noqa E501
+        r = requests.get(url, timeout=FREQUENCY - 0.5)
+        r.raise_for_status()
+        meter_data = r.json()
+
+        values['frequency'] = powerflow_data['Body']['Data']['0']['Frequency_Phase_Average']
+
         # handling for null/None values
         for k, v in values.items():
             if v is None:
