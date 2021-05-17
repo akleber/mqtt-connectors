@@ -39,7 +39,7 @@ def fronius_data():
         r.raise_for_status()
         meter_data = r.json()
 
-        values['frequency'] = powerflow_data['Body']['Data']['0']['Frequency_Phase_Average']
+        values['frequency'] = meter_data['Body']['Data']['0']['Frequency_Phase_Average']
 
         # handling for null/None values
         for k, v in values.items():
