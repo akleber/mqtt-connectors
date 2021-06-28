@@ -7,6 +7,7 @@ INFLUXDB_HOST = 'influxdb.kleber'
 
 FRONIUS_HOST = 'fronius.kleber'
 FRONIUS_MQTT_PREFIX = 'fronius'
+ENERGYMETER_MQTT_PREFIX = 'energymeter'
 
 MODBUS_HOST = 'fronius.kleber'
 BATTERY_MQTT_PREFIX = 'battery'
