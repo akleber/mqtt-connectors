@@ -28,3 +28,5 @@ ZOE_MQTT_PREFIX = 'zoe'
 HEATER_MQTT_PREFIX = 'heater'
 
 VCONTROLD_MQTT_PREFIX = 'vcontrold'
+
+DIESEL_MQTT_PREFIX = 'diesel'

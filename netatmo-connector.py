@@ -7,7 +7,7 @@ import logging
 import sys
 
 from config import *
-import secrets
+from secrets import *
 
 
 FREQUENCY = 10 * 60  # in seconds
