@@ -37,9 +37,14 @@ def fetch_data():
         if not data['ok']:
             raise RuntimeError('tankerkoenig result not ok')
 
-        values['aral'] = data['prices']['73ce263a-8b6a-4b3f-b283-a1f4dc0925c4']['diesel']
-        values['metro'] = data['prices']['51d4b70c-a095-1aa0-e100-80009459e03a']['diesel']
-        values['shell'] = data['prices']['213e33be-8b98-4a3f-8f52-fec1edbb6403']['diesel']
+        if 'diesel' in data['prices']['73ce263a-8b6a-4b3f-b283-a1f4dc0925c4']:
+            values['aral'] = data['prices']['73ce263a-8b6a-4b3f-b283-a1f4dc0925c4']['diesel']
+        
+        if 'diesel' in data['prices']['51d4b70c-a095-1aa0-e100-80009459e03a']:
+            values['metro'] = data['prices']['51d4b70c-a095-1aa0-e100-80009459e03a']['diesel']
+
+        if 'diesel' in data['prices']['213e33be-8b98-4a3f-8f52-fec1edbb6403']:
+            values['shell'] = data['prices']['213e33be-8b98-4a3f-8f52-fec1edbb6403']['diesel']
 
     except requests.exceptions.Timeout:
         logging.error(f"Timeout requesting {url}")
