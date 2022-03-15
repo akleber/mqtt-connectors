@@ -7,7 +7,7 @@ import sys
 from pyze.api import Gigya, Kamereon, Vehicle
 
 from config import *
-import secrets
+from secrets import *
 
 
 FREQUENCY = 1200  # sec
@@ -16,8 +16,8 @@ EXCEPTION_DELAY = 300
 
 def getSocRange(gigya):
 
-    k = Kamereon(api_key=secrets.KAMEREON_API_KEY, gigya=gigya, country='DE')
-    v = Vehicle(secrets.ZOE_VIN, k)
+    k = Kamereon(api_key=KAMEREON_API_KEY, gigya=gigya, country='DE')
+    v = Vehicle(ZOE_VIN, k)
 
     b = v.battery_status()
     soc = b['batteryLevel']
@@ -48,8 +48,8 @@ if __name__ == '__main__':
     # mqttc.enable_logger()
 
     try:
-        g = Gigya(api_key=secrets.GIGYA_API_KEY)
-        g.login(secrets.ZOE_ZE_USERNAME, secrets.ZOE_ZE_PASSWORD)  # You should only need to do this once
+        g = Gigya(api_key=GIGYA_API_KEY)
+        g.login(ZOE_ZE_USERNAME, ZOE_ZE_PASSWORD)  # You should only need to do this once
         g.account_info()  # Retrieves and caches person ID
     except Exception:
         logging.exception("Exception during Gigya login, sleeping 30s")

@@ -53,10 +53,10 @@ if __name__ == '__main__':
     mqttc.loop_start()
 
     authorization = pyatmo.ClientAuth(
-        clientId=secrets.NETATMO_CLIENT_ID,
-        clientSecret=secrets.NETATMO_CLIENT_SECRET,
-        username=secrets.NETATMO_USERNAME,
-        password=secrets.NETATMO_PASSWORD,
+        clientId=NETATMO_CLIENT_ID,
+        clientSecret=NETATMO_CLIENT_SECRET,
+        username=NETATMO_USERNAME,
+        password=NETATMO_PASSWORD,
     )
 
     while True:
