@@ -3,6 +3,7 @@
 import paho.mqtt.client as mqtt
 import datetime
 import time
+import json
 from influxdb import InfluxDBClient
 from config import *
 
@@ -13,34 +14,69 @@ def on_connect(client, userdata, flags, rc):
 
 
 def on_message(client, userdata, msg):
-    # print("Received a message on topic: " + msg.topic)
+    topic = msg.topic
+    # print("Received a message on topic: " + topic)
     # Use utc as timestamp
     receiveTime = datetime.datetime.utcnow()
     message = msg.payload.decode("utf-8")
-    isfloatValue = False
+
+    if "tele/" in topic:
+        send_tasmota_data(topic, receiveTime, message)
+    else:
+        send_plain_data(topic, receiveTime, message)
+
+
+def send_tasmota_data(topic, receiveTime, message):
+    try:
+        data = json.loads(message)
+    except json.JSONDecodeError:
+        return
+
+    energy = data.get("ENERGY")
+    if not energy:
+        return
+    
+    points = []
+    for k,v in energy.items():
+        try:
+            float_v = float(v)
+        except Exception:
+            continue
+
+        point = {
+                "measurement": f"{topic}/{k}",
+                "time": receiveTime,
+                "fields": {
+                    "value": float_v
+                }
+            }
+        points.append(point)
+
+    dbclient.write_points(points)
+
+
+def send_plain_data(topic, receiveTime, message):
     try:
         # Convert the string to a float so that it is stored as a number and not a string in the database
         val = float(message)
-        isfloatValue = True
     except Exception:
         # print("Could not convert " + message + " to a float value")
-        isfloatValue = False
+        return
 
-    if isfloatValue:
-        # print(str(receiveTime) + ": " + msg.topic + " " + str(val))
+    # print(str(receiveTime) + ": " + topic + " " + str(val))
 
-        json_body = [
-            {
-                "measurement": msg.topic,
-                "time": receiveTime,
-                "fields": {
-                    "value": val
-                }
+    points = [
+        {
+            "measurement": topic,
+            "time": receiveTime,
+            "fields": {
+                "value": val
             }
-        ]
+        }
+    ]
 
-        dbclient.write_points(json_body)
-        # print("Finished writing to InfluxDB")
+    dbclient.write_points(points)
+    # print("Finished writing to InfluxDB")
 
 
 print("start")
