@@ -4,6 +4,8 @@ import paho.mqtt.client as mqtt
 import datetime
 import time
 import json
+import logging
+import sys
 from influxdb import InfluxDBClient
 from config import *
 
@@ -52,7 +54,10 @@ def send_tasmota_data(topic, receiveTime, message):
             }
         points.append(point)
 
-    dbclient.write_points(points)
+    try:
+        dbclient.write_points(points)
+    except Exception:
+        logging.exception("Exception writing to db")
 
 
 def send_plain_data(topic, receiveTime, message):
@@ -75,15 +80,22 @@ def send_plain_data(topic, receiveTime, message):
         }
     ]
 
-    dbclient.write_points(points)
+    try:
+        dbclient.write_points(points)
+    except Exception:
+        logging.exception("Exception writing to db")
     # print("Finished writing to InfluxDB")
 
 
-print("start")
+logging.basicConfig(stream=sys.stdout,
+                    format='%(asctime)s %(levelname)-8s %(message)s',
+                    datefmt='%Y-%m-%d %H:%M:%S',
+                    level=logging.INFO)
+logging.info("start")
 
 # Set up a client for InfluxDB
 dbclient = InfluxDBClient(INFLUXDB_HOST, 8086, 'mqtt', 'mqtt', 'mqtt')
-print("dbclient created")
+logging.info("dbclient created")
 
 # Initialize the MQTT client that should connect to the Mosquitto broker
 client = mqtt.Client()
@@ -98,7 +110,7 @@ while(connOK is False):
         connOK = False
     time.sleep(2)
 
-print("mqtt connection established")
+logging.info("mqtt connection established")
 
 # Blocking loop to the Mosquitto broker
 client.loop_forever()
