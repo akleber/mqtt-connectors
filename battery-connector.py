@@ -15,9 +15,6 @@ from pymodbus.payload import BinaryPayloadDecoder
 from pymodbus.client.sync import ModbusTcpClient as ModbusClient
 
 
-FREQUENCY = 10
-
-
 def battery_data():
 
     values = {}
@@ -81,18 +78,4 @@ if __name__ == '__main__':
     mqttc.on_message = on_message
     mqttc.subscribe("{}/set/chg_pct".format(BATTERY_MQTT_PREFIX), 0)
 
-    mqttc.loop_start()
-    while True:
-        try:
-            update()
-            time.sleep(FREQUENCY)
-        except KeyboardInterrupt:
-            break
-        except Exception:
-            raise
-
-    mqttc.publish("{}/connectorstatus".format(BATTERY_MQTT_PREFIX), "Battery Connector: OFF-LINE", retain=True) # noqa E501
-
-    mqttc.disconnect()
-    mqttc.loop_stop()  # waits, until DISCONNECT message is sent out
-    logging.info("Disconnected from to {}:{}".format(BROKER_HOST, BROKER_PORT))
+    mqttc.loop_forever()
