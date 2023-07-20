@@ -30,6 +30,10 @@ def energymeter_data():
         values['e_feedin'] = meter_data['Body']['Data']['0']['EnergyReal_WAC_Sum_Produced'] / 1000
         values['e_receive'] = meter_data['Body']['Data']['0']['EnergyReal_WAC_Sum_Consumed'] / 1000
 
+        values['voltage_l1'] = meter_data['Body']['Data']['0']['Voltage_AC_Phase_1']
+        values['voltage_l2'] = meter_data['Body']['Data']['0']['Voltage_AC_Phase_2']
+        values['voltage_l3'] = meter_data['Body']['Data']['0']['Voltage_AC_Phase_3']
+
         # handling for null/None values
         for k, v in values.items():
             if v is None:
