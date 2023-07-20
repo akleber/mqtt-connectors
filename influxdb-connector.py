@@ -24,8 +24,43 @@ def on_message(client, userdata, msg):
 
     if "tele/" in topic:
         send_tasmota_data(topic, receiveTime, message)
+    elif "growatt" in topic:
+        send_growatt_data(topic, receiveTime, message)
     else:
         send_plain_data(topic, receiveTime, message)
+
+
+def send_growatt_data(topic, receiveTime, message):
+    try:
+        data = json.loads(message)
+    except json.JSONDecodeError:
+        return
+
+    fields = ["PV1Voltage", "PV1InputCurrent", "PV1InputPower", 
+              "OutputPower", "GridFrequency", "L1ThreePhaseGridVoltage", "L1ThreePhaseGridOutputCurrent",
+              "L1ThreePhaseGridOutputPower", "TodayGenerateEnergy", "TotalGenerateEnergy", "TWorkTimeTotal",
+              "InverterTemperature"]
+
+    points = []
+    for field in fields:
+        try:
+            float_v = float(data[field])
+        except Exception:
+            continue
+
+        point = {
+                "measurement": f"{topic}/{field}",
+                "time": receiveTime,
+                "fields": {
+                    "value": float_v
+                }
+            }
+        points.append(point)
+
+    try:
+        dbclient.write_points(points)
+    except Exception:
+        logging.exception("Exception writing to db")
 
 
 def send_tasmota_data(topic, receiveTime, message):
