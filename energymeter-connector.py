@@ -40,15 +40,19 @@ def energymeter_data():
                 values[k] = 0
 
     except requests.exceptions.Timeout:
-        print("Timeout requesting {}".format(url))
+        logging.exception("Timeout requesting {}".format(url))
     except requests.exceptions.RequestException as e:
-        print("requests exception {}".format(e))
+        logging.exception("requests exception {}".format(e))
 
     return values
 
 
 if __name__ == '__main__':
-    logging.basicConfig(stream=sys.stderr, level=logging.INFO)
+    logging.basicConfig(stream=sys.stdout,
+                        format='%(asctime)s %(levelname)-8s %(message)s',
+                        datefmt='%Y-%m-%d %H:%M:%S',
+                        level=logging.INFO)
+    
     logging.getLogger("urllib3").setLevel(logging.INFO)
 
     mqttc = paho.Client('energymeter-connector', clean_session=True)
