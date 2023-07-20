@@ -13,8 +13,8 @@ import sys
 from config import *
 
 
-FREQUENCY = 300  # 5min
-TIMEOUT = 10  #sec
+FREQUENCY = 10  #sec
+TIMEOUT = 3  #sec
 
 
 def energymeter_data():
