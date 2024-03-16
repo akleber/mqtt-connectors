@@ -22,10 +22,11 @@ def fetch_data():
     # 73ce263a-8b6a-4b3f-b283-a1f4dc0925c4 Aral Tankstelle Darmstädter Str.
     # 51d4b70c-a095-1aa0-e100-80009459e03a Supermarkt-Tankstelle WEITERSTADT IM ROEDLING 8 A
     # 213e33be-8b98-4a3f-8f52-fec1edbb6403 Shell Buettelborn A67 Buettelborn Sued
+    # de607d7b-9acf-4135-9568-7f0ea8e7121d Shell Buettelborn Im Mehlsee 5
 
     values = {}
 
-    tankstellen = ['73ce263a-8b6a-4b3f-b283-a1f4dc0925c4', '51d4b70c-a095-1aa0-e100-80009459e03a', '213e33be-8b98-4a3f-8f52-fec1edbb6403']
+    tankstellen = ['73ce263a-8b6a-4b3f-b283-a1f4dc0925c4', '51d4b70c-a095-1aa0-e100-80009459e03a', 'de607d7b-9acf-4135-9568-7f0ea8e7121d']
 
     try:
         tankstellenlist = ','.join(tankstellen)
@@ -39,12 +40,12 @@ def fetch_data():
 
         if 'diesel' in data['prices']['73ce263a-8b6a-4b3f-b283-a1f4dc0925c4']:
             values['aral'] = data['prices']['73ce263a-8b6a-4b3f-b283-a1f4dc0925c4']['diesel']
-        
+
         if 'diesel' in data['prices']['51d4b70c-a095-1aa0-e100-80009459e03a']:
             values['metro'] = data['prices']['51d4b70c-a095-1aa0-e100-80009459e03a']['diesel']
 
-        if 'diesel' in data['prices']['213e33be-8b98-4a3f-8f52-fec1edbb6403']:
-            values['shell'] = data['prices']['213e33be-8b98-4a3f-8f52-fec1edbb6403']['diesel']
+        if 'diesel' in data['prices']['de607d7b-9acf-4135-9568-7f0ea8e7121d']:
+            values['shell'] = data['prices']['de607d7b-9acf-4135-9568-7f0ea8e7121d']['diesel']
 
     except requests.exceptions.Timeout:
         logging.error(f"Timeout requesting {url}")
