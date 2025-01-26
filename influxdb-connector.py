@@ -69,12 +69,12 @@ def send_tasmota_data(topic, receiveTime, message):
     except json.JSONDecodeError:
         return
 
-    energy = data.get("ENERGY")
-    if not energy:
+    sensordata = data.get("ENERGY", data.get("WTS01"))
+    if not sensordata:
         return
     
     points = []
-    for k,v in energy.items():
+    for k,v in sensordata.items():
         try:
             float_v = float(v)
         except Exception:
