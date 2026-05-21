@@ -20,18 +20,48 @@ def fronius_data():
     values = {}
 
     try:
-        url = "http://{}/solar_api/v1/GetPowerFlowRealtimeData.fcgi".format(FRONIUS_HOST)  # noqa E501
-        r = requests.get(url, timeout=FREQUENCY - 0.5)
+        fronius_url = "http://{}/solar_api/v1/GetPowerFlowRealtimeData.fcgi".format(FRONIUS_HOST)  # noqa E501
+        r = requests.get(fronius_url, timeout=FREQUENCY - 0.5)
         r.raise_for_status()
-        powerflow_data = r.json()
+        fronius_data = r.json()
 
-        values['p_pv'] = powerflow_data['Body']['Data']['Site']['P_PV']
-        values['p_grid'] = powerflow_data['Body']['Data']['Site']['P_Grid']
-        values['p_akku'] = powerflow_data['Body']['Data']['Site']['P_Akku']
-        values['p_load'] = -powerflow_data['Body']['Data']['Site']['P_Load']
-        values['soc'] = powerflow_data['Body']['Data']['Inverters']['1'].get('SOC')
-        values['battery_mode'] = powerflow_data['Body']['Data']['Inverters']['1'].get('Battery_Mode')
-        values['e_day'] = powerflow_data['Body']['Data']['Inverters']['1']['E_Day'] / 1000
+        growatt_data = {}
+        try:
+            growatt_url = "http://{}/status".format(GROWATT_HOST)  # noqa E501
+            r = requests.get(growatt_url, timeout=FREQUENCY - 0.5)
+            r.raise_for_status()
+            growatt_data = r.json()
+        except Exception:
+            pass
+        growatt_p_pv = growatt_data.get('OutputPower', 0)
+        # print(f"growatt_p_pv: {growatt_p_pv}")
+
+        values['p_pv'] = fronius_data['Body']['Data']['Site']['P_PV']
+        values['p_grid'] = fronius_data['Body']['Data']['Site']['P_Grid']  # - is out
+        values['p_akku'] = fronius_data['Body']['Data']['Site']['P_Akku']  # + is out
+        values['p_load_orig'] = -fronius_data['Body']['Data']['Site']['P_Load']
+        values['soc'] = fronius_data['Body']['Data']['Inverters']['1'].get('SOC')
+        values['battery_mode'] = fronius_data['Body']['Data']['Inverters']['1'].get('Battery_Mode')
+        values['e_day'] = fronius_data['Body']['Data']['Inverters']['1']['E_Day'] / 1000
+
+        # print(f"p_pv: {values['p_pv']}")
+        # print(f"p_grid: {values['p_grid']}")
+        # print(f"p_akku: {values['p_akku']}")
+        # print(f"p_load_orig: {values['p_load_orig']}")
+
+        # p_load as reported by fronius inverter is wrong, as fronius does not know about
+        # the growatt generator. He sees it as load, thats why the load can become negative,
+        # whenever growatt is producing more power than what is actually consumed.
+        # Here we account/adjust for growatt by computing the load ourself.
+        # p_grid is the value reported by the fronius smart meter
+        my_load = values['p_grid'] + values['p_pv'] + growatt_p_pv + values['p_akku']
+        values['p_load'] = my_load
+
+        # print(f"my_load2: {my_load}")
+        # load_diff = my_load - values['p_load']
+        # print(f"load_diff: {load_diff}")
+
+
 
         # handling for null/None values
         for k, v in values.items():
@@ -39,7 +69,7 @@ def fronius_data():
                 values[k] = 0
 
     except requests.exceptions.Timeout:
-        print("Timeout requesting {}".format(url))
+        print("Timeout requesting {}".format(fronius_url))
     except requests.exceptions.RequestException as e:
         print("requests exception {}".format(e))
 

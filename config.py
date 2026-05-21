@@ -8,6 +8,7 @@ INFLUXDB_HOST = 'influxdb.kleber.home.arpa'
 FRONIUS_HOST = 'fronius.kleber.home.arpa'
 FRONIUS_MQTT_PREFIX = 'fronius'
 ENERGYMETER_MQTT_PREFIX = 'energymeter'
+GROWATT_HOST = 'growatt.kleber.home.arpa'
 
 MODBUS_HOST = 'fronius.kleber.home.arpa'
 BATTERY_MQTT_PREFIX = 'battery'
