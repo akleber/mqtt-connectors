@@ -9,6 +9,7 @@ import requests
 import time
 import logging
 import sys
+import numbers
 from config import *
 
 FREQUENCY = 3
@@ -49,10 +50,10 @@ def fronius_data():
 
         # handling for null/None values
         for k, v in values.items():
-            if v is None:
-                values[k] = 0
-            else:
+            if isinstance(v, numbers.Number):
                 values[k] = int(v)
+            else:
+                values[k] = 0
 
         # print(f"p_pv: {values['p_pv']}")
         # print(f"p_grid: {values['p_grid']}")
