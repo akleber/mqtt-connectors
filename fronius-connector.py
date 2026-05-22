@@ -50,6 +50,8 @@ def fronius_data():
 
         # handling for null/None values
         for k, v in values.items():
+            if k == "battery_mode":
+                continue
             if isinstance(v, numbers.Number):
                 values[k] = int(v)
             else:
