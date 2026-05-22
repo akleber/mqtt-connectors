@@ -35,7 +35,7 @@ def fronius_data():
             growatt_data = r.json()
         except Exception:
             pass
-        growatt_p_pv = growatt_data.get("OutputPower", 0)
+        growatt_p_pv = int(growatt_data.get("OutputPower", 0))
         # print(f"growatt_p_pv: {growatt_p_pv}")
 
         values["p_pv"] = fronius_data["Body"]["Data"]["Site"]["P_PV"]
