@@ -6,7 +6,7 @@ pymodbus==1.4.0
 pyserial==3.4
 requests==2.31.0
 six==1.11.0
-urllib3==1.26.5
+urllib3==1.26.18
 influxdb==5.2.1
 pyatmo==2.1.1
 pigpio-dht==0.3.2
